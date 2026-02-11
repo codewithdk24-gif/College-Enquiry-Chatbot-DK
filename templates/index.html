@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Sai College - Enquiry Chatbot | Sector 6 Bhilai</title>
+
+    <!-- Responsive Meta Tags -->
+    <meta name="description"
+        content="Sai College Sector 6 Bhilai - Premier Educational Institution in Chhattisgarh offering UG, PG & Diploma courses">
+    <meta name="keywords" content="Sai College, Bhilai, Education, BCA, BBA, BSc, MSc, Chhattisgarh">
+    <meta name="author" content="Sai College">
+
+    <!-- PWA Support -->
+    <meta name="theme-color" content="#667eea">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            --primary-color: #2a5298;
+            --primary-dark: #1a365d;
+            --secondary-color: #4a5568;
+            --bg-light: #f4f7f6;
+            --border-color: #cbd5e0;
+            --text-primary: #2d3748;
+            --text-secondary: #718096;
+            --success-color: #38a169;
+            --error-color: #e53e3e;
+            --shadow-sm: 0 2px 4px rgba(42, 82, 152, 0.1);
+            --shadow-md: 0 4px 12px rgba(42, 82, 152, 0.15);
+            --shadow-lg: 0 10px 25px rgba(42, 82, 152, 0.15);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 14px;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Main Chat Container - Mobile Optimized */
+        .chat-container {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 100%;
+            height: calc(100vh - 20px);
+            min-height: 500px;
+            max-height: 800px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 15px 20px;
+            position: relative;
+            z-index: 10;
+
+            display: grid;
+            grid-template-columns: 50px 1fr auto;
+            grid-template-areas: "icon title buttons";
+            align-items: center;
+            min-height: 70px;
+            gap: 10px;
+        }
+
+        .admin-icon {
+            grid-area: icon;
+            position: relative;
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .admin-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-header h2 {
+            grid-area: title;
+            font-size: 1.5rem;
+            margin: 0;
+            font-weight: 600;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-header p {
+            display: none;
+        }
+
+        .action-buttons {
+            grid-area: buttons;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            align-items: flex-end;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .chat-header {
+                grid-template-columns: 1fr 1fr;
+                grid-template-areas:
+                    "icon buttons"
+                    "title title";
+                padding: 15px;
+                height: auto;
+            }
+
+            .admin-icon {
+                justify-self: start;
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+
+            .action-buttons {
+                justify-self: end;
+                flex-direction: row;
+            }
+
+            .chat-header h2 {
+                font-size: 1.1rem;
+                white-space: normal;
+                margin-top: 5px;
+            }
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: var(--bg-light);
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .message {
+            margin-bottom: 12px;
+            display: flex;
+            gap: 8px;
+            animation: fadeIn 0.4s ease;
+            word-wrap: break-word;
+            max-width: 100%;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-bubble {
+            max-width: 85%;
+            padding: 10px 14px;
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            white-space: pre-line;
+            position: relative;
+            font-weight: 400;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+        }
+
+        .message.bot .message-bubble {
+            background: white;
+            color: var(--text-primary);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        .message.user .message-bubble {
+            background: var(--primary-gradient);
+            color: white;
+            font-weight: 500;
+        }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .message.bot .message-avatar {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .message.user .message-avatar {
+            background: var(--text-primary);
+            color: white;
+        }
+
+        /* Popup Buttons for Courses/Fees */
+        .popup-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .popup-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 18px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all var(--transition-speed) ease;
+            font-weight: 500;
+            white-space: nowrap;
+            touch-action: manipulation;
+            min-height: 36px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .popup-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Buttons Fix: Sabko Orange Theme me convert kiya */
+        .popup-btn.ug,
+        .popup-btn.pg,
+        .popup-btn.diploma {
+            background: white;
+            color: var(--primary-dark);
+            border: 1px solid var(--primary-color);
+        }
+
+        .popup-btn:hover {
+            background: var(--primary-gradient);
+            color: white;
+            border-color: transparent;
+            transform: translateY(-2px);
+        }
+
+        /* Language Buttons ke liye special style */
+        .language-buttons {
+            /* FIX: Explicitly setting position and z-index to guarantee clickability */
+            position: relative;
+            z-index: 10;
+            display: flex;
+            /* Inherited from popup-buttons but explicitly set for clarity */
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .language-buttons .popup-btn {
+            font-size: 0.9rem;
+            padding: 10px 20px;
+            min-width: 100px;
+            transition: all 0.2s ease;
+            /* FIX: pointer-events fix ke liye isse override nahi karenge */
+        }
+
+        .language-buttons .popup-btn:hover {
+            background: #1e3c72;
+            transform: scale(1.05);
+        }
+
+
+        /* Rating Buttons */
+        .rating-buttons {
+            margin-top: 8px;
+            display: none;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .rating-buttons.show {
+            display: flex;
+        }
+
+        .rating-btn {
+            background: #f0f0f0;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: all var(--transition-speed) ease;
+            font-weight: 500;
+            touch-action: manipulation;
+            min-height: 32px;
+        }
+
+        .rating-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .rating-btn.selected {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 3px;
+            background: white;
+            padding: 10px 14px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+
+            0%,
+            60%,
+            100% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+
+            30% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Welcome Message */
+        .welcome-message {
+            text-align: center;
+            padding: 15px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .welcome-message h3 {
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        /* Quick Action Buttons */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin: 15px 0;
+        }
+
+        .quick-btn {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-speed) ease;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--primary-color);
+            min-height: 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            touch-action: manipulation;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .quick-btn:hover {
+            background: var(--primary-gradient);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            border-color: transparent;
+        }
+
+        /* Chat Input */
+        .chat-input {
+            padding: 15px;
+            background: white;
+            border-top: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .input-field {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color var(--transition-speed) ease;
+            resize: none;
+            min-height: 44px;
+            max-height: 100px;
+            font-family: inherit;
+            -webkit-appearance: none;
+            appearance: none;
+            touch-action: manipulation;
+        }
+
+        .input-field:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .send-btn {
+            width: 44px;
+            height: 44px;
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease;
+            flex-shrink: 0;
+            touch-action: manipulation;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .send-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .send-btn:active {
+            transform: scale(0.95);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 25px;
+            border-radius: var(--radius-lg);
+            width: 95%;
+            max-width: 450px;
+            position: relative;
+            box-shadow: var(--shadow-lg);
+            animation: slideIn 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .close-modal {
+            color: #aaa;
+            float: right;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            transition: color var(--transition-speed) ease;
+            padding: 5px;
+            touch-action: manipulation;
+        }
+
+        .close-modal:hover {
+            color: var(--primary-color);
+        }
+
+        .modal h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.3rem;
+            padding-right: 35px;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color var(--transition-speed) ease;
+            font-family: inherit;
+            -webkit-appearance: none;
+            appearance: none;
+            touch-action: manipulation;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s ease;
+            min-height: 48px;
+            touch-action: manipulation;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* --- STAR RATING FIX FOR MOBILE --- */
+        .star-rating {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .star {
+            font-size: 30px;
+            cursor: pointer;
+
+            /* MY SUGGESTION:
+               - Transform (Zoom) ko 0.2s rakho (thoda bounce aayega)
+               - Filter (Color) ko 0.1s rakho (tezi se badlega par smooth) 
+            */
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.1s ease;
+
+            filter: grayscale(0%);
+            opacity: 1;
+        }
+
+        .star.unselected {
+            filter: grayscale(100%);
+            opacity: 0.3;
+        }
+
+        .star:hover {
+            /* 1.1 best size hai, professional lagta hai */
+            transform: scale(1.1);
+        }
+
+        .success-message {
+            background: var(--success-color);
+            color: white;
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            text-align: center;
+            margin-bottom: 15px;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        .gallery-container {
+            background: white;
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin-top: 10px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .gallery-item {
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform var(--transition-speed) ease;
+            background: #f0f0f0;
+            aspect-ratio: 1;
+            touch-action: manipulation;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 2px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        @media (min-width: 768px) {
+            html {
+                font-size: 15px;
+            }
+
+            .chat-container {
+                max-width: 95%;
+                height: 90vh;
+            }
+
+            .chat-header {
+                padding: 25px 30px;
+            }
+
+            .message-bubble {
+                max-width: 75%;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            html {
+                font-size: 16px;
+            }
+
+            .chat-container {
+                max-width: 100%;
+                height: 100vh;
+                border-radius: 0;
+                margin: 0;
+            }
+
+            body {
+                padding: 0;
+            }
+
+            .chat-header h2 {
+                font-size: 1.8rem;
+            }
+
+            .message-bubble {
+                max-width: 60%;
+                font-size: 1.05rem;
+            }
+
+            .quick-btn {
+                min-height: 80px;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+
+            .action-btn:hover,
+            .admin-icon:hover,
+            .quick-btn:hover,
+            .popup-btn:hover,
+            .send-btn:hover {
+                transform: none;
+            }
+
+            .action-btn:active {
+                transform: scale(0.95);
+            }
+
+            .quick-btn:active,
+            .popup-btn:active {
+                transform: scale(0.97);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .modal-content {
+                background-color: #2d3748;
+                color: white;
+            }
+
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                background-color: #4a5568;
+                color: white;
+                border-color: #718096;
+            }
+
+            .form-group label {
+                color: #e2e8f0;
+            }
+
+            .modal h2 {
+                color: #ffffff !important;
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            }
+
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- Main Chat Container -->
+    <div class="chat-container">
+        <!-- Chat Header: Original Center Title Structure Wapas Aaya -->
+        <div class="chat-header">
+
+            <!-- Center Title and Description: Ab yeh main content hai -->
+            <h2>🎓 SAI COLLEGE ENQUIRY CHATBOT</h2>
+            <p>Ask me anything about courses, admission & facilities!</p>
+
+            <!-- admin dashboard ka icon -->
+            <button class="admin-icon" onclick="window.location.href='/admin'" ...>🧑‍💼</button>
+
+            <!-- Action Buttons: Right side par Vertical Stack mein naya order -->
+            <div class="action-buttons">
+                <!-- 1. Gallery (Sabse upar) -->
+                <button class="action-btn" onclick="window.location.href='/gallery'" aria-label="Open Gallery">📸
+                    Gallery</button>
+                <!-- 2. Feedback (Neeche) -->
+                <button class="action-btn" onclick="openFeedbackModal()" aria-label="Open Feedback">📝 Feedback</button>
+            </div>
+        </div>
+
+        <!-- Chat Messages Area -->
+        <div class="chat-messages" id="chatMessages" role="log" aria-live="polite">
+            <!-- Welcome Message yahan se hata diya gaya hai, ab yeh JS se load hoga -->
+
+            <!-- Quick Action Buttons (Shortcuts) -->
+            <div class="quick-actions" id="quickActions" style="display: none;">
+                <!-- FIX: Purane 8 quick buttons yahan wapas aagaye hain -->
+                <div class="quick-btn" onclick="sendQuickMessage('College address')" role="button" tabindex="0">
+                    📍<br>Address</div>
+                <div class="quick-btn" onclick="sendQuickMessage('courses')" role="button" tabindex="0">📚<br>Courses
+                </div>
+                <div class="quick-btn" onclick="sendQuickMessage('fees')" role="button" tabindex="0">💰<br>Fees</div>
+                <div class="quick-btn" onclick="sendQuickMessage('Contact number')" role="button" tabindex="0">
+                    📞<br>Contact</div>
+                <div class="quick-btn" onclick="sendQuickMessage('Facilities')" role="button" tabindex="0">
+                    🏫<br>Facilities</div>
+                <div class="quick-btn" onclick="window.open('/syllabus', '_blank')" role="button" tabindex="0">
+                    📄<br>Syllabus</div>
+                <div class="quick-btn" onclick="window.location.href='/syllabus?type=notes'" role="button" tabindex="0">
+                    📒<br>Notes</div>
+                <div class="quick-btn" onclick="sendQuickMessage('Admission process')" role="button" tabindex="0">
+                    📋<br>Admission</div>
+                <div class="quick-btn" onclick="sendQuickMessage('About College')" role="button" tabindex="0">
+                    🏛️<br>About</div>
+            </div>
+
+            <!-- Typing Indicator -->
+            <div class="typing-indicator" id="typingIndicator">
+                <div class="message-avatar">🤖</div>
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Input -->
+        <div class="chat-input">
+            <div class="input-group">
+                <textarea class="input-field" id="messageInput" placeholder="Ask me about Sai College..." rows="1"
+                    aria-label="Message input"></textarea>
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()" aria-label="Send message">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feedback Modal -->
+    <div id="feedbackModal" class="modal" role="dialog" aria-labelledby="feedbackModalTitle" aria-hidden="true">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeFeedbackModal()" aria-label="Close">&times;</span>
+            <h2 id="feedbackModalTitle">📝 Your Feedback</h2>
+
+            <div class="success-message" id="feedbackSuccess">
+                Thank you for your feedback! 😊
+            </div>
+
+            <form id="feedbackForm">
+                <div class="form-group">
+                    <label for="feedbackType">Feedback Type:</label>
+                    <select id="feedbackType" required aria-required="true">
+                        <option value="">Select type...</option>
+                        <option value="general">General Feedback</option>
+                        <option value="suggestion">Suggestion</option>
+                        <option value="complaint">Complaint</option>
+                        <option value="appreciation">Appreciation</option>
+                        <option value="chatbot">Chatbot Improvement</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="feedbackMessage">Your Message:</label>
+                    <textarea id="feedbackMessage" placeholder="Please share your feedback..." required
+                        aria-required="true"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Rate your experience:</label>
+                    <div class="star-rating">
+                        <span class="star unselected" data-rating="1">⭐</span>
+                        <span class="star unselected" data-rating="2">⭐</span>
+                        <span class="star unselected" data-rating="3">⭐</span>
+                        <span class="star unselected" data-rating="4">⭐</span>
+                        <span class="star unselected" data-rating="5">⭐</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">Submit Feedback</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Photo Gallery Modal -->
+    <div id="galleryModal" class="modal" role="dialog" aria-labelledby="galleryModalTitle" aria-hidden="true">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeGalleryModal()" aria-label="Close">&times;</span>
+            <h2 id="galleryModalTitle" style="color: #667eea; text-align: center; margin-bottom: 20px;">📸 Sai College
+                Photo Gallery</h2>
+
+            <div class="gallery-container">
+                <h3 style="color: #667eea; margin-bottom: 10px; text-align: center;">Campus & Events</h3>
+
+                <div class="gallery-grid" id="galleryGrid">
+
+                    <div class="gallery-item" onclick="openAlbum('campus')">
+                        <div
+                            style="width: 100%; height: 100%; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; border-radius: 8px;">
+                            <div style="font-size: 2.5rem;">🏫</div>
+                            <div style="font-size: 1rem; font-weight: 600; margin-top: 5px;">Campus</div>
+                        </div>
+                    </div>
+
+                    <div class="gallery-item" onclick="openAlbum('labs')">
+                        <div
+                            style="width: 100%; height: 100%; background: linear-gradient(135deg, #38a169, #22543d); display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; border-radius: 8px;">
+                            <div style="font-size: 2.5rem;">🔬</div>
+                            <div style="font-size: 1rem; font-weight: 600; margin-top: 5px;">Labs</div>
+                        </div>
+                    </div>
+
+                    <div class="gallery-item" onclick="openAlbum('events')">
+                        <div
+                            style="width: 100%; height: 100%; background: linear-gradient(135deg, #e53e3e, #c53030); display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; border-radius: 8px;">
+                            <div style="font-size: 2.5rem;">🎓</div>
+                            <div style="font-size: 1rem; font-weight: 600; margin-top: 5px;">Events</div>
+                        </div>
+                    </div>
+
+                    <div class="gallery-item" onclick="openAlbum('sports')">
+                        <div
+                            style="width: 100%; height: 100%; background: linear-gradient(135deg, #3182ce, #2c5282); display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; border-radius: 8px;">
+                            <div style="font-size: 2.5rem;">🏆</div>
+                            <div style="font-size: 1rem; font-weight: 600; margin-top: 5px;">Sports</div>
+                        </div>
+                    </div>
+
+                    <div class="gallery-item" onclick="openAlbum('library')">
+                        <div
+                            style="width: 100%; height: 100%; background: linear-gradient(135deg, #805ad5, #553c9a); display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; border-radius: 8px;">
+                            <div style="font-size: 2.5rem;">📚</div>
+                            <div style="font-size: 1rem; font-weight: 600; margin-top: 5px;">Library</div>
+                        </div>
+                    </div>
+
+                    <div class="gallery-item" onclick="openAlbum('cultural')">
+                        <div
+                            style="width: 100%; height: 100%; background: linear-gradient(135deg, #d69e2e, #b7791f); display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; border-radius: 8px;">
+                            <div style="font-size: 2.5rem;">🌟</div>
+                            <div style="font-size: 1rem; font-weight: 600; margin-top: 5px;">Cultural</div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div style="text-align: center; margin-top: 15px; color: #666; font-size: 0.85rem;">
+                    <p>📷 Campus Life | 🏫 Academic Events | 🎊 Cultural Activities</p>
+                    <button onclick="window.open('/gallery', '_blank')"
+                        style="margin-top: 10px; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; border: none; padding: 10px 25px; border-radius: 50px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(42, 82, 152, 0.4);">
+                        View Full Gallery
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chatMessages = document.getElementById('chatMessages');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const typingIndicator = document.getElementById('typingIndicator');
+        const quickActions = document.getElementById('quickActions');
+        let selectedRating = 0;
+        let lastBotMessage = null;
+        let userActivityTimer = null;
+        let currentLanguage = 'Hinglish';
+
+        const albums = {
+            'campus': ['/static/images/main_gate.jpg', '/static/images/cafe1.jpg', '/static/images/cafe2.jpg'],
+            'labs': ['/static/images/lab1.jpg', '/static/images/lab2.jpg', '/static/images/lab3.jpg', '/static/images/lab4.jpg', '/static/images/lab5.jpg', '/static/images/lab6.jpg'],
+            'events': ['/static/images/event1.jpg', '/static/images/event2.jpg', '/static/images/event3.jpg'],
+            'sports': ['/static/images/sports1.jpg', '/static/images/sports2.jpg', '/static/images/sports3.jpg', '/static/images/sports4.jpg'],
+            'library': ['/static/images/library1.jpg', '/static/images/library2.jpg', '/static/images/library3.jpg', '/static/images/library4.jpg'],
+            'cultural': ['/static/images/cultural1.jpg', '/static/images/cultural2.jpg', '/static/images/cultural3.jpg', '/static/images/cultural4.jpg', '/static/images/cultural5.jpg']
+        };
+
+        window.onload = function () {
+            currentLanguage = 'English';
+
+            setTimeout(() => {
+                const welcomeMsg = "👋 **Hello! Welcome to Sai College.**\n\nHow can I assist you today? Feel free to ask about Courses, Fees, or Admissions!";
+                addMessage('bot', welcomeMsg, false);
+
+                if (quickActions) {
+                    quickActions.style.display = 'grid';
+                }
+            }, 500);
+
+            resetActivityTimer();
+
+            if (messageInput) {
+                messageInput.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+                });
+            }
+
+            let touchstartX = 0;
+            let touchendX = 0;
+            const slider = document.getElementById('slideshowModal');
+
+            if (slider) {
+                slider.addEventListener('touchstart', e => {
+                    touchstartX = e.changedTouches[0].screenX;
+                });
+
+                slider.addEventListener('touchend', e => {
+                    touchendX = e.changedTouches[0].screenX;
+                    handleSwipe();
+                });
+            }
+
+            function handleSwipe() {
+                if (touchendX < touchstartX - 50) changeSlide(1);
+                if (touchendX > touchstartX + 50) changeSlide(-1);
+            }
+
+            document.addEventListener('keydown', function (e) {
+                const modal = document.getElementById('slideshowModal');
+                if (modal && modal.style.display === 'block') {
+                    if (e.key === 'ArrowLeft') changeSlide(-1);
+                    if (e.key === 'ArrowRight') changeSlide(1);
+                    if (e.key === 'Escape') closeSlideshow();
+                }
+            });
+        };
+
+        window.setLanguage = function (clickedButton, lang) {
+            currentLanguage = lang;
+            const buttonsContainer = clickedButton.closest('.message');
+
+            clickedButton.textContent = 'Setting...';
+
+            fetch('/set-language', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ language: lang })
+            }).then(r => r.json()).then(data => {
+
+                if (buttonsContainer) buttonsContainer.style.display = 'none';
+
+                addMessage('bot', data.message, false);
+                if (quickActions) quickActions.style.display = 'grid';
+            }).catch(e => {
+                if (buttonsContainer) buttonsContainer.style.display = 'none';
+                addMessage('bot', "Language set!", false);
+                if (quickActions) quickActions.style.display = 'grid';
+            });
+        };
+
+        function showLanguageSelection() {
+            const msg = `<strong>🌐 Please select your language:</strong>
+            <div class="popup-buttons language-buttons" style="margin-top:10px;">
+            <button class="popup-btn" onclick="setLanguage(this,'English')">🇺🇸 English</button>
+            <button class="popup-btn" onclick="setLanguage(this,'Hindi')">🇮🇳 Hindi</button>
+            <button class="popup-btn" onclick="setLanguage(this,'Hinglish')">💬 Hinglish</button></div>`;
+            addMessage('bot', msg, false);
+            if (quickActions) quickActions.style.display = 'none';
+        }
+
+        window.sendMessage = async function () {
+            const msg = messageInput.value.trim();
+            if (!msg) return;
+
+            const langBtns = document.querySelector('.language-buttons');
+            if (langBtns) {
+                const parentMsg = langBtns.closest('.message');
+                if (parentMsg) {
+                    parentMsg.style.display = 'none';
+                }
+            }
+
+            if (quickActions && quickActions.style.display === 'none') {
+                quickActions.style.display = 'grid';
+            }
+
+            if (lastBotMessage) {
+                const prevRating = lastBotMessage.querySelector('.rating-buttons');
+                if (prevRating) prevRating.classList.remove('show');
+            }
+
+            addMessage('user', msg);
+            messageInput.value = '';
+            sendBtn.disabled = true;
+            if (typingIndicator) typingIndicator.style.display = 'flex';
+            scrollToBottom();
+
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: msg, language: currentLanguage })
+                });
+                const data = await response.json();
+                setTimeout(() => {
+                    if (typingIndicator) typingIndicator.style.display = 'none';
+                    addMessage('bot', data.response, true);
+
+                    if (msg.toLowerCase().includes('photo') || msg.toLowerCase().includes('gallery')) {
+                        setTimeout(() => window.openGalleryModal(), 500);
+                    }
+                    sendBtn.disabled = false;
+                }, 800);
+            } catch (error) {
+                if (typingIndicator) typingIndicator.style.display = 'none';
+                addMessage('bot', "⚠️ Connection error.");
+                sendBtn.disabled = false;
+            }
+        };
+
+        window.sendQuickMessage = function (msg) { messageInput.value = msg; sendMessage(); };
+        window.handleCourseQuery = function (c) { sendQuickMessage(c + ' courses'); };
+        window.handleFeesQuery = function (c) { sendQuickMessage(c + ' fees'); };
+
+        function addMessage(sender, text, showBtns = true) {
+            const div = document.createElement('div');
+            div.className = `message ${sender}`;
+
+            let content = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+                .replace(/\n/g, '<br>')
+                .replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color:#4fd1c5">$1</a>');
+
+            let btns = '';
+            if (sender === 'bot' && showBtns) {
+                if (text.includes('Category select karo')) {
+                    btns = `<div class="popup-buttons" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+                    <button class="popup-btn" onclick="handleCourseQuery('undergraduate')">📚 UG</button>
+                    <button class="popup-btn" onclick="handleCourseQuery('postgraduate')">🎓 PG</button>
+                    <button class="popup-btn" onclick="handleCourseQuery('diploma')">📜 Diploma</button></div>`;
+                }
+                else if (text.includes('Fee category select karo')) {
+                    btns = `<div class="popup-buttons" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+                    <button class="popup-btn" onclick="handleFeesQuery('undergraduate')">💰 UG Fees</button>
+                    <button class="popup-btn" onclick="handleFeesQuery('postgraduate')">💰 PG Fees</button>
+                    <button class="popup-btn" onclick="handleFeesQuery('diploma')">💰 Diploma Fees</button></div>`;
+                }
+            }
+
+            div.innerHTML = `<div class="message-avatar">${sender === 'bot' ? '🤖' : '👤'}</div><div class="message-bubble">${content}${btns}</div>`;
+            chatMessages.insertBefore(div, typingIndicator);
+            lastBotMessage = div;
+            scrollToBottom();
+        }
+
+        function scrollToBottom() { if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight; }
+        function resetActivityTimer() { clearTimeout(userActivityTimer); }
+
+        window.openGalleryModal = function () { document.getElementById('galleryModal').style.display = 'block'; };
+        window.closeGalleryModal = function () { document.getElementById('galleryModal').style.display = 'none'; };
+        window.openFeedbackModal = function () {
+            document.getElementById('feedbackModal').style.display = 'block';
+
+            selectedRating = 0;
+            if (typeof updateStars === "function") {
+                updateStars(0);
+            }
+        };
+        window.closeFeedbackModal = function () { document.getElementById('feedbackModal').style.display = 'none'; };
+
+        let currentAlbum = [];
+        let currentImageIndex = 0;
+
+        window.openAlbum = function (cat) {
+            if (albums[cat] && albums[cat].length > 0) {
+                currentAlbum = albums[cat];
+                currentImageIndex = 0;
+                const modal = document.getElementById('slideshowModal');
+                const img = document.getElementById('slideshowImg');
+                if (modal && img) {
+                    img.src = currentAlbum[0];
+                    modal.style.display = 'block';
+                }
+            } else { alert('No photos found.'); }
+        };
+
+        window.changeSlide = function (n) {
+            currentImageIndex += n;
+            if (currentImageIndex >= currentAlbum.length) currentImageIndex = 0;
+            if (currentImageIndex < 0) currentImageIndex = currentAlbum.length - 1;
+            document.getElementById('slideshowImg').src = currentAlbum[currentImageIndex];
+        };
+
+        window.closeSlideshow = function () { document.getElementById('slideshowModal').style.display = 'none'; };
+        window.onclick = function (e) { if (e.target.classList.contains('modal')) e.target.style.display = 'none'; };
+
+        const stars = document.querySelectorAll('.star');
+        stars.forEach(star => {
+            star.addEventListener('click', function () {
+                selectedRating = this.getAttribute('data-rating');
+                updateStars(selectedRating);
+            });
+        });
+
+        function updateStars(rating) {
+            const stars = document.querySelectorAll('.star');
+
+            stars.forEach(s => {
+                const starVal = s.getAttribute('data-rating');
+
+                s.style.color = '';
+                s.style.filter = '';
+
+                if (starVal <= rating) {
+                    s.classList.remove('unselected');
+                } else {
+                    s.classList.add('unselected');
+                }
+            });
+        }
+
+        const feedbackForm = document.getElementById('feedbackForm');
+        if (feedbackForm) {
+            feedbackForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                const type = document.getElementById('feedbackType').value;
+                const message = document.getElementById('feedbackMessage').value;
+                const submitBtn = document.querySelector('.submit-btn');
+
+                submitBtn.disabled = true;
+                submitBtn.textContent = "Submitting...";
+
+                try {
+                    const csrfToken = document
+                        .querySelector('meta[name="csrf-token"]')
+                        .getAttribute('content');
+
+                    const response = await fetch('/feedback', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken
+                        },
+
+                        body: JSON.stringify({
+                            type: type,
+                            message: message,
+                            rating: selectedRating
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        document.getElementById('feedbackSuccess').style.display = 'block';
+                        feedbackForm.reset();
+
+                        setTimeout(() => {
+                            document.getElementById('feedbackSuccess').style.display = 'none';
+                            closeFeedbackModal();
+                            submitBtn.disabled = false;
+                            submitBtn.textContent = "Submit Feedback";
+                        }, 2000);
+                    }
+                } catch (error) {
+                    alert("Error submitting feedback. Please try again.");
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Submit Feedback";
+                }
+            });
+        }
+
+    </script>
+
+    <div id="slideshowModal" class="modal" style="z-index: 10001;">
+        <span class="close-modal" onclick="closeSlideshow()"
+            style="color: white; z-index: 10002; position: absolute; top: 20px; right: 30px; font-size: 40px;">&times;</span>
+
+        <div class="slideshow-content"
+            style="display: flex; align-items: center; justify-content: center; height: 100vh;">
+            <button onclick="changeSlide(-1)"
+                style="background:none; border:none; color:white; font-size:40px; cursor:pointer; padding: 20px;">&#10094;</button>
+
+            <img id="slideshowImg" src=""
+                style="max-width: 90%; max-height: 80vh; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.5);">
+
+            <button onclick="changeSlide(1)"
+                style="background:none; border:none; color:white; font-size:40px; cursor:pointer; padding: 20px;">&#10095;</button>
+        </div>
+    </div>
+
+    <div id="slideshowModal" class="modal"
+        style="display: none; position: fixed; z-index: 10001; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.9);">
+
+        <span class="close-modal" onclick="closeSlideshow()"
+            style="color: white; position: absolute; top: 20px; right: 35px; font-size: 40px; font-weight: bold; cursor: pointer; z-index: 10002;">&times;</span>
+
+        <div class="slideshow-content"
+            style="display: flex; align-items: center; justify-content: center; height: 100%; width: 100%;">
+
+            <button onclick="changeSlide(-1)"
+                style="background: none; border: none; color: white; font-size: 50px; cursor: pointer; padding: 20px; user-select: none; position: absolute; left: 10px;">&#10094;</button>
+
+            <img id="slideshowImg" src=""
+                style="max-width: 90%; max-height: 85vh; border-radius: 8px; box-shadow: 0 0 25px rgba(0,0,0,0.8); object-fit: contain;">
+
+            <button onclick="changeSlide(1)"
+                style="background: none; border: none; color: white; font-size: 50px; cursor: pointer; padding: 20px; user-select: none; position: absolute; right: 10px;">&#10095;</button>
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Gallery | Sai College</title>
+    <style>
+        /* --- 1. MODERN RESET & FONTS --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: #0f172a;
+            /* Dark Premium Background */
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* --- 2. HERO SECTION (Full Width Header) --- */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)), url('/static/images/main_gate.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            /* Parallax Effect */
+            height: 50vh;
+            /* Screen ka aadha hissa */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            text-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #cbd5e1;
+            max-width: 600px;
+        }
+
+        /* --- 3. FILTER BUTTONS --- */
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 30px 20px;
+            flex-wrap: wrap;
+            background: #1e293b;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: 1px solid #475569;
+            color: #cbd5e1;
+            padding: 8px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: #3b82f6;
+            border-color: #3b82f6;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        /* --- 4. FULL WIDTH GALLERY GRID --- */
+        .gallery-container {
+            padding: 20px;
+            max-width: 1600px;
+            /* Laptop par bhi faila hua dikhega */
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #94a3b8;
+            margin: 40px 0 20px 0;
+            border-left: 5px solid #3b82f6;
+            padding-left: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            /* Auto adjust columns */
+            gap: 15px;
+        }
+
+        .photo-card {
+            position: relative;
+            height: 250px;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .photo-card:hover {
+            transform: scale(1.03);
+            z-index: 10;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .photo-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.5s;
+        }
+
+        /* Broken Image Fix */
+        .photo-card img[src=""] {
+            display: none;
+        }
+
+        /* --- 5. LIGHTBOX (POPUP VIEWER) --- */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            backdrop-filter: blur(10px);
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 80vh;
+            border-radius: 8px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .close-lightbox {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 3rem;
+            color: white;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: 0.2s;
+        }
+
+        .close-lightbox:hover {
+            opacity: 1;
+            color: #ef4444;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="hero">
+        <h1>Sai College Gallery</h1>
+        <p>Experience our campus life, events, and memories in high resolution.</p>
+        <a href="/"
+            style="margin-top:20px; color:white; text-decoration:none; border:1px solid white; padding:10px 20px; border-radius:30px;">←
+            Back to Home</a>
+    </div>
+
+    <div class="filters">
+        <button class="filter-btn active" onclick="filterGallery('all')">All Photos</button>
+        <button class="filter-btn" onclick="filterGallery('campus')">🏫 Campus</button>
+        <button class="filter-btn" onclick="filterGallery('events')">🎉 Events</button>
+        <button class="filter-btn" onclick="filterGallery('labs')">🔬 Labs</button>
+        <button class="filter-btn" onclick="filterGallery('sports')">🏆 Sports</button>
+    </div>
+
+    <div class="gallery-container">
+        <div id="dynamic-gallery" class="photo-grid">
+            <div style="color:#64748b; padding:20px; grid-column: 1/-1; text-align:center;">Loading beautiful
+                memories...</div>
+        </div>
+    </div>
+
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <span class="close-lightbox">&times;</span>
+        <img id="lightbox-img" src="">
+    </div>
+
+    <script>
+        // --- 1. LOAD IMAGES ---
+        let allImages = [];
+
+        window.onload = function () {
+            fetch('/api/gallery-images')
+                .then(res => res.json())
+                .then(data => {
+                    allImages = data;
+                    renderGallery('all'); // Pehle sab dikhao
+                })
+                .catch(err => {
+                    document.getElementById('dynamic-gallery').innerHTML = '<h3 style="text-align:center; width:100%;">Gallery is empty. Upload from Admin Panel!</h3>';
+                });
+        };
+
+        // --- 2. RENDER LOGIC ---
+        function renderGallery(filter) {
+            const container = document.getElementById('dynamic-gallery');
+            container.innerHTML = ''; // Clear old
+
+            // Filter Logic
+            const filtered = filter === 'all'
+                ? allImages
+                : allImages.filter(img => {
+                    if (filter === 'campus') {
+                        return !['events', 'labs', 'sports'].includes(img.category);
+                    }
+                    return img.category === filter;
+
+                });
+
+
+
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div style="text-align:center; padding:40px; grid-column:1/-1; color:#64748b;">No photos found in ${filter}.</div>`;
+                return;
+            }
+
+            filtered.forEach(img => {
+                const div = document.createElement('div');
+                div.className = 'photo-card';
+                div.onclick = () => openLightbox(`/static/images/gallery/${img.filename}`);
+
+                // HTML inject with ERROR HANDLER
+                div.innerHTML = `
+                    <img src="/static/images/gallery/${img.filename}" 
+                         alt="${img.category}" 
+                         loading="lazy"
+                         onerror="this.parentElement.style.display='none'">
+                `;
+                container.appendChild(div);
+            });
+
+            // Update Buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.innerText.toLowerCase().includes(filter) || (filter === 'all' && btn.innerText.includes('All'))) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        // --- 3. FILTER FUNCTION ---
+        function filterGallery(category) {
+            renderGallery(category);
+        }
+
+        // --- 4. LIGHTBOX FUNCTIONS ---
+        function openLightbox(src) {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox').style.display = 'flex';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').style.display = 'none';
+        }
+    </script>
+
+</body>
+
+</html>

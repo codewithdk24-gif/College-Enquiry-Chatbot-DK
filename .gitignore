@@ -1,0 +1,22 @@
+# Virtual environment
+.venv/
+venv/
+
+# Environment variables
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Logs & data files
+data/*.csv
+data/*.bak
+data/admin_activity_logs.csv
+data/chat_logs.csv
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store

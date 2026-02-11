@@ -1,0 +1,2581 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Admin Dashboard - Sai College Chatbot</title>
+  <meta name="description" content="Sai College Admin Dashboard - Analytics Management System">
+  <meta name="theme-color" content="#2a5298">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    html {
+      font-size: 14px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #f5f7fa;
+      color: #333;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      padding: 12px 25px;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .brand-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo-box {
+      width: 48px;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-text h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 800;
+      line-height: 1;
+      text-transform: uppercase;
+      background: linear-gradient(to right, #fff, #bfdbfe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .brand-text p {
+      margin: 4px 0 0 0;
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.8);
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+    }
+
+    .action-pill {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50px;
+      padding: 5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      backdrop-filter: blur(10px);
+    }
+
+    .pill-btn {
+      background: transparent;
+      border: none;
+      color: white;
+      padding: 8px 18px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 40px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+      font-family: inherit;
+    }
+
+    .pill-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .logout-btn:hover {
+      background: #ff4757;
+      box-shadow: 0 2px 10px rgba(255, 71, 87, 0.4);
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        padding: 8px 12px;
+      }
+
+      .brand-wrapper {
+        gap: 8px;
+      }
+
+      .logo-box {
+        width: 36px;
+        height: 36px;
+        font-size: 1.4rem;
+      }
+
+      .brand-text h1 {
+        font-size: 1.1rem;
+      }
+
+      .brand-text p {
+        display: none;
+      }
+
+      .action-pill {
+        padding: 3px;
+        gap: 2px;
+      }
+
+      .pill-btn {
+        padding: 6px 10px;
+        font-size: 0.75rem;
+        gap: 4px;
+      }
+
+      .action-pill div[style*="width:1px"] {
+        height: 12px !important;
+      }
+    }
+
+    /* Main layout & login */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 10px;
+    }
+
+    #loginContainer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 9999;
+      background: linear-gradient(rgba(44, 62, 80, 0.7), rgba(52, 152, 219, 0.4)), url('/static/images/main_gate.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+
+    .login-card {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      position: relative;
+      animation: slideUp 0.5s ease-out;
+    }
+
+    .modern-input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e1e5e9;
+      border-radius: 10px;
+      font-size: 15px;
+      outline: none;
+      transition: all 0.3s;
+      background: #f8f9fa;
+      box-sizing: border-box;
+    }
+
+    .modern-input:focus {
+      border-color: #2a5298;
+      background: white;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(50px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+      margin-top: 20px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+      text-align: center;
+      transition: transform 0.3s;
+      border: 1px solid #e1e5e9;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.15);
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #2a5298;
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      color: #666;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* --- SECTION STYLES --- */
+    .section {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+      margin-bottom: 20px;
+      border: 1px solid #e1e5e9;
+    }
+
+    .section h2 {
+      color: #333;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #2a5298;
+      padding-bottom: 8px;
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+
+    /* --- FILTERS & BUTTONS --- */
+    .filter-controls {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .filter-select {
+      padding: 8px 12px;
+      border: 1px solid #ced4da;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      outline: none;
+      flex: 1;
+      min-width: 140px;
+      background-color: #f8f9fa;
+    }
+
+    .export-btn,
+    .refresh-btn {
+      background: #10b981;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.2s;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .refresh-btn {
+      background: linear-gradient(135deg, #2a5298 0, #1e3c72 100%);
+      width: 100%;
+      margin: 5px 0 15px 0;
+    }
+
+    .export-btn:hover,
+    .refresh-btn:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+    }
+
+    .refresh-indicator {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border: 2px solid white;
+      border-top: 2px solid transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-right: 8px;
+      display: none;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* --- TABLE STYLES --- */
+    .table-container {
+      overflow-x: auto;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      min-width: 700px;
+    }
+
+    .data-table th,
+    .data-table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+      font-size: 0.9rem;
+      color: #444;
+    }
+
+    .data-table th {
+      background: #f1f3f9;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .data-table tr:hover {
+      background: #f8f9ff;
+    }
+
+    /* --- BADGES & STATUS --- */
+    .status-new {
+      background: #3b82f6;
+      color: white;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+    }
+
+    .status-pending {
+      background: #f59e0b;
+      color: white;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+    }
+
+    .status-resolved {
+      background: #10b981;
+      color: white;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+    }
+
+    .rating {
+      color: #f59e0b;
+      font-weight: bold;
+    }
+
+    .feedback-type {
+      font-weight: 600;
+      color: #2a5298;
+      text-transform: capitalize;
+    }
+
+    /* Action Buttons */
+    .action-btn {
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      border: none;
+      font-weight: 600;
+      margin-right: 4px;
+      cursor: pointer;
+      color: white;
+      transition: opacity 0.2s;
+    }
+
+    .action-btn:hover {
+      opacity: 0.8;
+    }
+
+    .action-btn.view {
+      background: #2a5298;
+    }
+
+    .action-btn.resolved {
+      background: #10b981;
+    }
+
+    .action-btn.rejected {
+      background: #ef4444;
+    }
+
+    /* --- MODALS & ALERTS --- */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 10005;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(2px);
+    }
+
+    .modal-content {
+      background-color: white;
+      margin: 10% auto;
+      padding: 25px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      color: #333;
+    }
+
+    .close-modal {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close-modal:hover {
+      color: #333;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 30px;
+      color: #888;
+      font-style: italic;
+    }
+
+    .alert {
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    .alert-success {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+
+    .alert-error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .auto-refresh-info {
+      font-size: 0.8rem;
+      color: #888;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    /* --- MOBILE RESPONSIVE FIXES --- */
+    @media (max-height: 500px) and (max-width: 900px) {
+      #loginContainer {
+        align-items: center;
+        padding: 10px;
+      }
+
+      .login-card {
+        padding: 10px 20px;
+        max-width: 480px;
+        margin: 0 auto;
+      }
+
+      .login-card div[style*="font-size: 3rem"] {
+        font-size: 1.2rem !important;
+        margin-bottom: 2px !important;
+      }
+
+      .login-card p {
+        display: none;
+      }
+
+      .login-card h2 {
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+      }
+
+      #loginForm div[style*="margin-bottom"] {
+        margin-bottom: 8px !important;
+      }
+
+      .modern-input {
+        padding: 6px 10px;
+        font-size: 13px;
+      }
+
+      #loginBtn {
+        padding: 8px;
+        font-size: 0.85rem;
+      }
+
+      .login-card div[style*="margin-top: 20px"] {
+        margin-top: 10px !important;
+        font-size: 0.8rem !important;
+      }
+    }
+
+    .back-home {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color: #2a5298;
+      font-weight: 600;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 5px 10px;
+      border-radius: 20px;
+    }
+
+    @media (max-width: 480px) {
+      .back-home {
+        top: 15px;
+        left: 15px;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+
+      .upload-section,
+      .admin-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 15px !important;
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+
+      .upload-section input[type="text"],
+      .upload-section input[type="file"],
+      .upload-section select {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+      }
+
+      .upload-btn {
+        width: 100% !important;
+        display: block;
+        margin-top: 5px;
+        font-size: 0.9rem;
+        padding: 10px;
+      }
+    }
+
+    /* --- FORMS & TABS --- */
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #4a5568;
+      margin-bottom: 5px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #cbd5e0;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: 0.2s;
+      font-family: inherit;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: #2a5298;
+      box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-weight: 600;
+      color: #64748b;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+    }
+
+    .tab-btn:hover {
+      background: #e0f2fe;
+      color: #0369a1;
+    }
+
+    .tab-btn.active {
+      color: #2a5298;
+      border-bottom: 3px solid #2a5298;
+      background: white;
+      box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.02);
+    }
+
+    .tab-content {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+
+
+    .gallery-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 15px;
+    }
+
+    .gallery-actions button,
+    .gallery-actions a {
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-upload {
+      background: linear-gradient(135deg, #2563eb, #1e40af);
+      color: #fff;
+      box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+    }
+
+    .btn-upload:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(37, 99, 235, 0.45);
+    }
+
+    .btn-view {
+      background: rgba(15, 23, 42, 0.85);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-view {
+      text-decoration: none !important;
+    }
+
+    style>.btn-view {
+      text-decoration: none !important;
+    }
+
+    .btn-view:hover,
+    .btn-view:focus {
+      text-decoration: none !important;
+    }
+
+    .action-btn {
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .action-btn.view {
+      background-color: #1e3a8a;
+      color: #fff;
+    }
+
+    .action-btn.resolved {
+      background-color: #16a34a;
+      color: #fff;
+    }
+
+    .action-btn.rejected {
+      background-color: #ef4444;
+      color: #fff;
+    }
+
+    .action-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+button[onclick*="markAsResolved"] { background:#77ed93; color:#fff; }
+button[onclick*="markAsRejected"] { background:#f45464; color:#fff; }
+
+button[onclick*="markAsResolved"],
+button[onclick*="markAsRejected"] {
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: none;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+button[onclick*="markAsResolved"] {
+    background-color: #1e7e34; /* green like View */
+    color: #fff;
+}
+
+button[onclick*="markAsRejected"] {
+    background-color: #c82333; /* red like View */
+    color: #fff;
+}
+
+</style>
+
+</head>
+
+<body>
+
+  <div id="loginContainer">
+    <div class="login-card">
+
+      <a href="/" class="back-home">← Back to Home</a>
+
+      <div style="font-size: 3rem; margin-bottom: 10px;">🎓</div>
+
+      <h2 style="color: #333; margin-bottom: 5px; font-weight: 700;">Admin Login</h2>
+      <p style="color: #666; font-size: 0.9rem; margin-bottom: 25px;">Secure Access Panel</p>
+
+      <form id="loginForm">
+
+        <div style="margin-bottom: 20px; text-align: left;">
+          <label style="font-weight: 600; font-size: 0.9rem; color: #444; margin-left: 5px;">Username</label>
+          <input type="text" id="usernameInput" class="modern-input" placeholder="Enter Admin ID" required>
+        </div>
+
+        <div style="margin-bottom: 25px; text-align: left;">
+          <label style="font-weight: 600; font-size: 0.9rem; color: #444; margin-left: 5px;">Password</label>
+          <input type="password" id="passwordInput" class="modern-input" placeholder="Enter Password" required>
+        </div>
+
+        <button type="submit" id="loginBtn"
+          style="width: 100%; padding: 14px; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: transform 0.2s; box-shadow: 0 5px 15px rgba(42, 82, 152, 0.3);">
+          Login Dashboard
+        </button>
+
+        <div style="margin-top: 20px; display: flex; justify-content: space-between; font-size: 0.9rem;">
+          <a href="#" onclick="openResetModal()" style="color: #2a5298; font-weight: 600; text-decoration: none;">Forgot
+            Password?</a>
+        </div>
+
+        <div id="loginError"
+          style="color: #e53e3e; font-size: 14px; margin-top: 15px; display: none; background: #fff5f5; padding: 8px; border-radius: 6px; border: 1px solid #feb2b2;">
+          Invalid credentials!
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <div id="dashboardContainer" style="display: none;">
+
+    <div class="header">
+      <div class="brand-wrapper">
+        <div class="logo-box">🎓</div>
+        <div class="brand-text">
+          <h1>SAI COLLEGE</h1>
+          <p>🛡️ ADMIN DASHBOARD 🛠️</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <div class="action-pill">
+          <button onclick="openSettingsModal()" class="pill-btn" title="Edit College Info">
+            <span>⚙</span> <span>Edit Info</span>
+          </button>
+
+          <div style="width:1px; height:18px; background:rgba(255,255,255,0.3);"></div>
+
+          <button onclick="adminLogout()" class="pill-btn logout-btn" title="Logout">
+            <span>⏻</span> <span>Logout</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-number" id="totalFeedback">0</div>
+          <div class="stat-label">Total Feedback</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="unknownQueries">0</div>
+          <div class="stat-label">Unknown Queries</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="avgRating">0</div>
+          <div class="stat-label">Average Rating</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="todayFeedback">0</div>
+          <div class="stat-label">Today's Feedback</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="resolvedQueries">0</div>
+          <div class="stat-label">Resolved Items</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="responseRate">0%</div>
+          <div class="stat-label">Response Rate</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>📊 Analytics & Insights</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+
+          <div style="flex: 1; min-width: 300px; max-width: 450px; height: 300px; position: relative;">
+            <canvas id="ratingChart"></canvas>
+          </div>
+
+          <div style="flex: 1; min-width: 300px; max-width: 450px; height: 300px; position: relative;">
+            <canvas id="typeChart"></canvas>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h2 style="margin:0; border:none; color: #1e293b; font-size: 1.2rem;">📚 Study Material</h2>
+
+          <div style="background: #e2e8f0; padding: 4px; border-radius: 8px; display: flex; gap: 4px;">
+            <button onclick="setUploadType('syllabus')" id="tab-syllabus" class="type-tab active"
+              style="padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: 0.2s; background: white; color: #2a5298; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+              📄 Syllabus
+            </button>
+            <button onclick="setUploadType('notes')" id="tab-notes" class="type-tab"
+              style="padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: 0.2s; color: #64748b; background: transparent;">
+              📒 Notes
+            </button>
+          </div>
+        </div>
+
+        <div
+          style="background: #ffffff; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+
+          <h4 id="uploadTitle" style="margin-top:0; color:#334155; margin-bottom: 15px; font-weight: 700;">
+            📤 Upload Syllabus
+          </h4>
+
+          <input type="hidden" id="uploadCategory" value="syllabus">
+
+          <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px;">
+            <div style="flex: 1 1 200px; position: relative;">
+              <input list="courseOptions" id="pdfCourse" class="filter-select" placeholder="🔍 Search Course"
+                style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; box-sizing: border-box;">
+              <datalist id="courseOptions"></datalist>
+            </div>
+            <select id="pdfSem" class="filter-select"
+              style="flex: 1 1 200px; padding: 12px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; box-sizing: border-box;">
+              <option value="" disabled selected>Select Semester</option>
+              <option value="Sem 1">Semester 1</option>
+              <option value="Sem 2">Semester 2</option>
+              <option value="Sem 3">Semester 3</option>
+              <option value="Sem 4">Semester 4</option>
+              <option value="Sem 5">Semester 5</option>
+              <option value="Sem 6">Semester 6</option>
+              <option value="Yearly">Yearly Pattern</option>
+            </select>
+          </div>
+
+          <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <input type="file" id="pdfUploadInput" accept=".pdf"
+              style="flex: 1 1 250px; padding: 10px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; width: 100%; box-sizing: border-box;">
+            <button onclick="uploadPDF()" id="uploadBtn"
+              style="flex: 1 1 150px; background: #2a5298; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.2s; white-space: nowrap; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+              ⬆ Upload File
+            </button>
+          </div>
+        </div>
+
+        <div style="margin-top: 25px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <h4 style="margin: 0; color: #64748b; font-size: 0.9rem; text-transform: uppercase;">Recent Uploads</h4>
+            <button onclick="openFullLibrary()"
+              style="background: none; border: none; color: #2a5298; font-weight: 600; cursor: pointer;">📂 View All
+              Files &rarr;</button>
+          </div>
+
+          <div id="recentPdfList"
+            style="border: 1px solid #e1e5e9; border-radius: 12px; overflow: hidden; background: white;">
+            <div style="padding: 20px; text-align: center; color: #94a3b8;">Loading recent files...</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="alertContainer"></div>
+
+      <div class="section">
+        <h2>Feedback Management</h2>
+        <div class="filter-controls">
+          <select class="filter-select" id="feedbackFilter">
+            <option value="all">All Feedback</option>
+            <option value="new">New</option>
+            <option value="pending">Pending</option>
+            <option value="resolved">Resolved</option>
+          </select>
+          <select class="filter-select" id="typeFilter">
+            <option value="all">All Types</option>
+            <option value="general">General</option>
+            <option value="suggestion">Suggestion</option>
+            <option value="complaint">Complaint</option>
+            <option value="appreciation">Appreciation</option>
+            <option value="chatbot">Chatbot</option>
+          </select>
+          <button class="export-btn" onclick="exportFeedback()">Export CSV</button>
+        </div>
+        <button class="refresh-btn" onclick="loadFeedback()">
+          <span class="refresh-indicator" id="feedbackLoader"></span>
+          Refresh Feedback Data
+        </button>
+        <div class="table-container">
+          <div id="feedbackContainer">
+            <div class="empty-state">
+              <p>Loading feedback data...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Unknown Queries Management</h2>
+        <div class="filter-controls">
+          <select class="filter-select" id="queryFilter">
+            <option value="all">All Queries</option>
+            <option value="pending">Pending</option>
+            <option value="resolved">Resolved</option>
+          </select>
+          <button class="export-btn" onclick="exportQueries()">Export CSV</button>
+        </div>
+        <button class="refresh-btn" onclick="loadUnknownQueries()">
+          <span class="refresh-indicator" id="queriesLoader"></span>
+          Refresh Queries Data
+        </button>
+        <div class="table-container">
+          <div id="unknownContainer">
+            <div class="empty-state">
+              <p>Loading unknown queries...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="auto-refresh-info">
+        Auto-refresh every 30 seconds | Last updated: <span id="lastUpdated">Never</span>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="messageModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeMessageModal()">&times;</span>
+      <h3 id="modalTitle" style="margin-top:0; color: #2a5298;">Full Message</h3>
+      <div class="modal-message" id="modalMessage"
+        style="margin-top: 15px; background: #f8f9fa; padding: 15px; border-radius: 8px;"></div>
+    </div>
+  </div>
+
+  <div id="libraryModal"
+    style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 10000; align-items: center; justify-content: center;">
+    <div
+      style="background: white; width: 90%; max-width: 800px; max-height: 90vh; border-radius: 16px; display: flex; flex-direction: column; box-shadow: 0 20px 50px rgba(0,0,0,0.3);">
+
+      <div
+        style="padding: 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+        <h2 style="margin: 0; color: #1e293b;">📂 Full Library Database</h2>
+        <button onclick="closeFullLibrary()"
+          style="background: #f1f5f9; border: none; width: 32px; height: 32px; border-radius: 50%; font-size: 1.2rem; cursor: pointer;">&times;</button>
+      </div>
+
+      <div
+        style="padding: 15px 20px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; gap: 10px; flex-wrap: wrap;">
+        <input type="text" id="librarySearch" placeholder="🔍 Search filename, course..." onkeyup="filterLibrary()"
+          style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1;">
+
+        <select id="libraryFilterType" onchange="filterLibrary()"
+          style="padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1;">
+          <option value="all">All Types</option>
+          <option value="syllabus">Only Syllabus</option>
+          <option value="notes">Only Notes</option>
+        </select>
+      </div>
+
+      <div id="fullPdfList" style="flex: 1; overflow-y: auto; padding: 0;">
+      </div>
+
+      <div style="padding: 15px; text-align: right; border-top: 1px solid #e2e8f0;">
+        <button onclick="closeFullLibrary()"
+          style="padding: 10px 20px; background: #1e293b; color: white; border: none; border-radius: 8px; cursor: pointer;">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="resetModal" class="modal"
+    style="display: none; position: fixed; z-index: 10005; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(4px);">
+    <div class="modal-content"
+      style="background: white; margin: 15% auto; padding: 30px; border-radius: 12px; width: 90%; max-width: 400px; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+      <span onclick="closeResetModal()"
+        style="position: absolute; right: 20px; top: 15px; font-size: 24px; cursor: pointer; color: #666;">&times;</span>
+
+      <h3 style="text-align: center; color: #333; margin-bottom: 20px; margin-top: 0;">Reset Password</h3>
+
+      <div style="margin-bottom: 15px;">
+        <label style="display: block; margin-bottom: 5px; color: #666; font-size: 0.9rem;">Secret Master Code</label>
+        <input type="text" id="secretCode" placeholder="Enter Secret Code"
+          style="width: 100%; padding: 10px; border: 2px solid #e1e5e9; border-radius: 8px; box-sizing: border-box;">
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <label style="display: block; margin-bottom: 5px; color: #666; font-size: 0.9rem;">New Password</label>
+        <input type="password" id="newPassword" placeholder="New Password"
+          style="width: 100%; padding: 10px; border: 2px solid #e1e5e9; border-radius: 8px; box-sizing: border-box;">
+      </div>
+
+      <button onclick="handleReset()" id="resetBtn"
+        style="width: 100%; padding: 12px; background: #ef4444; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.3s;">Reset
+        Now</button>
+
+      <div id="resetStatus" style="text-align: center; margin-top: 15px; font-size: 0.9rem; min-height: 20px;"></div>
+    </div>
+  </div>
+
+  <div id="settingsModal" class="modal">
+    <div class="modal-content"
+      style="background: white; margin: 40px auto; width: 95%; max-width: 700px; height: 75vh; border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+
+      <div
+        style="background: #2a5298; padding: 15px 20px; color: white; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
+        <h2 style="margin: 0; font-size: 1.1rem;">🛠️ College Data Manager</h2>
+        <span onclick="closeSettingsModal()" style="cursor: pointer; font-size: 1.5rem; opacity: 0.8;">&times;</span>
+      </div>
+
+      <div
+        style="display: flex; background: #f1f5f9; border-bottom: 1px solid #e2e8f0; flex-shrink: 0; overflow-x: auto;">
+        <button class="tab-btn active" onclick="switchEditTab('basic')">📝 Basic</button>
+        <button class="tab-btn" onclick="switchEditTab('courses')">📚 Courses</button>
+        <button class="tab-btn" onclick="switchEditTab('facilities')">🏫 Facilities</button>
+        <button class="tab-btn" onclick="switchEditTab('advanced')">⚙️ JSON</button>
+        <button class="tab-btn" onclick="switchEditTab('gallery')">🖼️ Gallery</button>
+      </div>
+
+      <div style="padding: 20px; overflow-y: auto; flex: 1;">
+
+        <div id="tab-basic" class="tab-content" style="display: block;">
+          <div class="form-group"><label>College Name</label><input type="text" id="inp_name"></div>
+          <div class="form-group"><label>Tagline</label><input type="text" id="inp_tagline"></div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div class="form-group"><label>Phone</label><input type="text" id="inp_phone"></div>
+            <div class="form-group"><label>Email</label><input type="text" id="inp_email"></div>
+          </div>
+          <div class="form-group"><label>Address</label><textarea id="inp_address" rows="2"></textarea></div>
+          <div class="form-group"><label>Website</label><input type="text" id="inp_website"></div>
+        </div>
+
+        <div id="tab-courses" class="tab-content" style="display: none;">
+          <div
+            style="background: #e0f2fe; padding: 15px; border-radius: 8px; border: 1px solid #bae6fd; margin-bottom: 20px;">
+            <h4 style="margin-top:0; color:#0369a1;">➕ Add / Update Course</h4>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+              <div>
+                <label style="font-size:0.8rem; font-weight:bold;">Category</label>
+                <select id="course_cat" class="modern-input" style="padding:8px;">
+                  <option value="ug_courses">UG (Undergraduate)</option>
+                  <option value="pg_courses">PG (Postgraduate)</option>
+                  <option value="diploma_courses">Diploma</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size:0.8rem; font-weight:bold;">Course Name</label>
+                <input type="text" id="course_name" class="modern-input" style="padding:8px;" placeholder="Course Name">
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+              <div>
+                <label style="font-size:0.8rem; font-weight:bold;">Duration</label>
+                <input type="text" id="course_dur" class="modern-input" style="padding:8px;" placeholder="e.g. 3 Years">
+              </div>
+              <div>
+                <label style="font-size:0.8rem; font-weight:bold;">Fees</label>
+                <input type="text" id="course_fee" class="modern-input" style="padding:8px;" placeholder="e.g. ₹20,000">
+              </div>
+            </div>
+            <div style="margin-bottom: 10px;">
+              <label style="font-size:0.8rem; font-weight:bold;">Description</label>
+              <textarea id="course_desc" class="modern-input" style="padding:8px;" rows="2"
+                placeholder="Course details..."></textarea>
+            </div>
+            <button onclick="addCourseLogic()"
+              style="background:#0284c7; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer; font-weight:bold;">➕
+              Add/Update</button>
+          </div>
+
+          <div style="margin-top: 25px; border-top: 0.5px solid #cbd5e1; padding-top: 20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+              <h4 style="margin:0; color:#334155;">📋 Existing Courses</h4>
+              <span style="font-size:0.8rem; color:#64748b;">(Click Edit to modify)</span>
+            </div>
+            <div id="coursesListContainer"
+              style="max-height: 350px; overflow-y: auto; background: white; border-radius: 8px; border: 0.5px solid #cbd5e1; padding: 0;">
+              <div style="padding:20px; text-align:center; color:#94a3b8;">Loading courses...</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-facilities" class="tab-content" style="display: none;">
+          <div
+            style="background: #dcfce7; padding: 15px; border-radius: 8px; border: 1px solid #bbf7d0; margin-bottom: 20px;">
+            <h4 style="margin-top:0; color:#15803d;">➕ Add / Update Facility</h4>
+            <div style="margin-bottom: 10px;">
+              <label style="font-size:0.8rem; font-weight:bold;">Facility Key (One Word)</label>
+              <input type="text" id="fac_key" class="modern-input" style="padding:8px;" placeholder="e.g. canteen">
+            </div>
+            <div style="margin-bottom: 10px;">
+              <label style="font-size:0.8rem; font-weight:bold;">Description</label>
+              <textarea id="fac_desc" class="modern-input" style="padding:8px;" rows="3"
+                placeholder="Describe..."></textarea>
+            </div>
+            <button onclick="addFacilityLogic()"
+              style="background:#16a34a; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer; font-weight:bold;">➕
+              Update Facility</button>
+          </div>
+
+          <div style="margin-top: 25px; border-top: 0.5px solid #cbd5e1; padding-top: 20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+              <h4 style="margin:0; color:#334155;">📋 Existing Facilities</h4>
+              <span style="font-size:0.8rem; color:#64748b;">(Click Edit to modify)</span>
+            </div>
+            <div id="facilitiesListContainer"
+              style="max-height: 350px; overflow-y: auto; background: white; border-radius: 8px; border: 0.5px solid #cbd5e1; padding: 0;">
+              <div style="padding:20px; text-align:center; color:#94a3b8;">Loading facilities...</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-advanced" class="tab-content" style="display: none;">
+          <div
+            style="background: #fff3cd; color: #856404; padding: 10px; border-radius: 5px; margin-bottom: 10px; font-size: 0.8rem;">
+            ⚠ <strong>Developer Mode:</strong> Edit raw JSON data carefully.
+          </div>
+          <textarea id="jsonEditor"
+            style="width: 100%; height: 300px; padding: 10px; border: 1px solid #ccc; font-family: monospace; background: #2d3748; color: #a0aec0; border-radius: 8px;"></textarea>
+        </div>
+
+        <div id="tab-gallery" class="tab-content" style="display: none;">
+          <div
+            style="background: #f0f9ff; padding: 20px; border-radius: 8px; border: 1px solid #bae6fd; text-align: center;">
+            <h4 style="margin-top:0; color:#0284c7;">📸 Upload Event Photo</h4>
+            <select id="gallery_category" style="width: 80%; padding: 10px; margin-bottom: 10px;">
+              <option value="campus">🏫 Campus Life</option>
+              <option value="events">🎓 Academic Events</option>
+              <option value="labs">🔬 Labs & Facilities</option>
+              <option value="sports">🏆 Sports</option>
+              <option value="library">📚 Library</option>
+              <option value="cultural">🌟 Cultural Activities</option>
+            </select>
+            <input type="file" id="gallery_file_input" accept="image/*"
+              style="display: block; width: 80%; margin: 0 auto 20px auto;">
+
+            <div class="gallery-actions">
+              <button class="btn-upload" onclick="uploadGalleryImageLogic()">☁️ Upload</button>
+              <a href="/admin/gallery-manager" class="btn-view">🖼️ View All Images</a>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+      <div
+        style="padding: 15px 20px; text-align: right; border-top: 1px solid #eee; background: #f8fafc; flex-shrink: 0;">
+        <button onclick="closeSettingsModal()"
+          style="background: #e2e8f0; color: #333; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; margin-right: 10px;">Cancel</button>
+        <button onclick="saveAllSettings()"
+          style="background: #2a5298; color: white; border: none; padding: 10px 25px; border-radius: 8px; cursor: pointer; font-weight: 600;">💾
+          Save All Changes</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    window.onload = function () {
+      document.getElementById('loginForm').addEventListener('submit', handleLogin);
+      fetch('/admincheck-session')
+        .then(r => r.json())
+        .then(data => {
+          if (data.loggedin) {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('dashboardContainer').style.display = 'block';
+            loadFeedback();
+            loadUnknownQueries();
+            initializeFilters();
+            startAutoRefresh();
+          }
+        }).catch(() => {
+          document.getElementById('loginContainer').style.display = 'flex';
+        });
+      initializeFilters();
+    }
+
+    let feedbackData = [];
+    let queriesData = [];
+    let refreshInterval;
+    function startAutoRefresh() {
+      refreshInterval = setInterval(() => {
+        loadFeedback(true);
+        loadUnknownQueries(true);
+      }, 30000);
+    }
+    function updateLastUpdated() {
+      document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString();
+    }
+    function showAlert(message, type) {
+      const alertContainer = document.getElementById('alertContainer');
+      const alert = document.createElement('div');
+      alert.className = 'alert alert-' + (type || 'success');
+      alert.textContent = message;
+      alertContainer.appendChild(alert);
+      setTimeout(() => alert.remove(), 5000);
+    }
+    function loadFeedback(silent = false) {
+      if (!silent) document.getElementById('feedbackLoader').style.display = 'inline-block';
+      fetch('/adminfeedback?t=' + new Date().getTime())
+        .then(response => response.json())
+        .then(data => {
+          feedbackData = data.feedback || [];
+          if (feedbackData.length) {
+            filterFeedback();
+            updateStats(feedbackData, 'feedback');
+          } else {
+            document.getElementById('feedbackContainer').innerHTML = '<div class="empty-state"><p>No feedback received yet</p></div>';
+          }
+          if (!silent) showAlert('Feedback data refreshed successfully');
+        }).catch(() => {
+          document.getElementById('feedbackContainer').innerHTML = '<div class="empty-state"><p>Error loading feedback data</p></div>';
+          showAlert('Error loading feedback data', 'error');
+        }).finally(() => {
+          if (!silent) document.getElementById('feedbackLoader').style.display = 'none';
+          updateLastUpdated();
+        });
+    }
+    function loadUnknownQueries(silent = false) {
+      if (!silent) document.getElementById('queriesLoader').style.display = 'inline-block';
+      fetch('/adminunknown-queries?t=' + new Date().getTime())
+        .then(response => response.json())
+        .then(data => {
+          queriesData = data.queries || [];
+          if (queriesData.length) {
+            filterQueries();
+            updateStats(queriesData, 'queries');
+          } else {
+            document.getElementById('unknownContainer').innerHTML = '<div class="empty-state"><p>No unknown queries - Great job!</p></div>';
+          }
+          if (!silent) showAlert('Unknown queries refreshed successfully');
+        }).catch(() => {
+          document.getElementById('unknownContainer').innerHTML = '<div class="empty-state"><p>Error loading unknown queries</p></div>';
+          showAlert('Error loading unknown queries', 'error');
+        }).finally(() => {
+          if (!silent) document.getElementById('queriesLoader').style.display = 'none';
+          updateLastUpdated();
+        });
+    }
+    function displayFeedback(feedback) {
+      const container = document.getElementById('feedbackContainer');
+      if (!feedback || feedback.length == 0) {
+        container.innerHTML = '<div class="empty-state"><p>No feedback matches the current filter</p></div>';
+        return;
+      }
+      const table = document.createElement('table');
+      table.className = 'data-table';
+      table.innerHTML = `<thead>
+        <tr>
+          <th>Date</th>
+          <th>Type</th>
+          <th>Message Preview</th>
+          <th>Rating</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead><tbody>` +
+        feedback.map((item, index) =>
+          `<tr>
+            <td>${formatDate(item.timestamp)}</td>
+            <td><span class="feedback-type">${item.type || item.feedbacktype || 'general'}</span></td>
+            <td class="message-preview" onclick="viewFullMessage(${index}, 'feedback', '${item.status}', '${escapeHtml(item.message)}','Feedback Message')" title="Click to view full message">${truncateMessage(item.message, 40)}</td>
+            <td><span class="rating">${item.rating !== 'NA' ? '★'.repeat(parseInt(item.rating || 0)) : ''}</span> ${item.rating}</td>
+            <td><span class="status-${item.status}">${item.status}</span></td>
+            <td>
+              <button class="action-btn view" onclick="viewFullMessage(${index}, 'feedback', '${item.status}', '${escapeHtml(item.message)}', 'Feedback Message')">View</button>
+              <button onclick="markAsResolved(${index}, 'feedback')">Resolve</button>
+              <button onclick="markAsRejected(${index}, 'feedback')">Reject</button>
+
+            </td>
+          </tr>`
+        ).join('') +
+        `</tbody>`;
+      container.innerHTML = '';
+      container.appendChild(table);
+    }
+
+    function displayUnknownQueries(queries) {
+      const container = document.getElementById('unknownContainer');
+      if (!queries || queries.length == 0) {
+        container.innerHTML = '<div class="empty-state"><p>No unknown queries match the current filter</p></div>';
+        return;
+      }
+      const table = document.createElement('table');
+      table.className = 'data-table';
+      table.innerHTML = `<thead>
+    <tr>
+      <th>Date & Time</th>
+      <th>Query</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead><tbody>` +
+        queries.map((item, index) =>
+          `<tr>
+        <td>${item.timestamp ? formatDate(item.timestamp) : '—'}</td>
+        <td style="max-width:300px;word-break:break-word;">${escapeHtml(item.query || '')}</td>
+        <td><span class="status-${item.status || 'pending'}">${item.status || 'pending'}</span></td>
+        <td>
+          <button onclick="markAsResolved(${index}, 'query')">Resolve</button>
+          <button onclick="markAsRejected(${index}, 'query')">Reject</button>
+
+        </td>
+      </tr>`
+        ).join('') +
+        `</tbody>`;
+      container.innerHTML = '';
+      container.appendChild(table);
+    }
+
+    function formatDate(timestamp) {
+      const date = new Date(timestamp);
+      return date.toLocaleDateString('en-IN', { month: 'short', day: 'numeric' }) + ' ' + date.toLocaleTimeString('en-IN');
+    }
+    function truncateMessage(message, length) {
+      return message.length > length ? message.substring(0, length) + "..." : message;
+    }
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML.replace(/'/g, "\\'");
+    }
+
+    // --- 📊 GLOBAL CHART VARIABLES ---
+    let ratingChartInstance = null;
+    let typeChartInstance = null;
+
+    function updateStats(data, type) {
+
+      // 1. UPDATE TEXT NUMBERS
+      if (type === 'feedback') {
+        document.getElementById('totalFeedback').textContent = feedbackData.length;
+
+        const ratings = feedbackData.filter(f => f.rating !== 'NA').map(f => parseInt(f.rating || 0));
+        const avgRating = ratings.length ? (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1) : 0;
+        document.getElementById('avgRating').textContent = avgRating;
+
+        const today = new Date().toDateString();
+        const todayFeedback = feedbackData.filter(f => new Date(f.timestamp).toDateString() === today);
+        document.getElementById('todayFeedback').textContent = todayFeedback.length;
+
+        // 🔥 Yahan se Graph update hoga
+        updateCharts(feedbackData);
+      }
+      else if (type === 'queries') {
+        document.getElementById('unknownQueries').textContent = queriesData.length;
+      }
+
+      const resFeedback = feedbackData.filter(f => f.status === 'resolved').length;
+      const resQueries = queriesData.filter(q => q.status === 'resolved').length;
+      const totalResolved = resFeedback + resQueries;
+      document.getElementById('resolvedQueries').textContent = totalResolved;
+
+      const totalItems = feedbackData.length + queriesData.length;
+      const rate = totalItems ? ((totalResolved / totalItems) * 100).toFixed(1) : "0";
+      document.getElementById('responseRate').textContent = rate + "%";
+    }
+
+    // ✅ NAYA GRAPH FUNCTION
+    function updateCharts(data) {
+      // Data taiyar karo
+      let starCounts = [0, 0, 0, 0, 0];
+      data.forEach(item => {
+        if (item.rating && item.rating !== 'NA') {
+          let r = parseInt(item.rating);
+          if (r >= 1 && r <= 5) starCounts[r - 1]++;
+        }
+      });
+
+      let types = {};
+      data.forEach(item => {
+        let t = item.type || item.feedbacktype || 'General';
+        t = t.charAt(0).toUpperCase() + t.slice(1);
+        types[t] = (types[t] || 0) + 1;
+      });
+
+      // 1. Rating Chart Draw karo
+      const ctx1 = document.getElementById('ratingChart');
+      if (ctx1) {
+        if (ratingChartInstance) ratingChartInstance.destroy();
+        ratingChartInstance = new Chart(ctx1.getContext('2d'), {
+          type: 'doughnut',
+          data: {
+            labels: ['1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars'],
+            datasets: [{
+              data: starCounts,
+              backgroundColor: ['#ef4444', '#f97316', '#eab308', '#3b82f6', '#22c55e'],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'right' },
+              title: { display: true, text: 'Student Satisfaction' }
+            }
+          }
+        });
+      }
+
+      // 2. Type Chart Draw karo
+      const ctx2 = document.getElementById('typeChart');
+      if (ctx2) {
+        if (typeChartInstance) typeChartInstance.destroy();
+        typeChartInstance = new Chart(ctx2.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: Object.keys(types),
+            datasets: [{
+              label: 'Feedback Count',
+              data: Object.values(types),
+              backgroundColor: '#2a5298',
+              borderRadius: 5
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              title: { display: true, text: 'Issues Category' }
+            },
+            scales: {
+              y: { beginAtZero: true, ticks: { stepSize: 1 } }
+            }
+          }
+        });
+      }
+    }
+
+    // -------- Filter controls ----------
+    function initializeFilters() {
+      document.getElementById('feedbackFilter').addEventListener('change', filterFeedback);
+      document.getElementById('typeFilter').addEventListener('change', filterFeedback);
+      document.getElementById('queryFilter').addEventListener('change', filterQueries);
+    }
+    function filterFeedback() {
+      const statusFilter = document.getElementById('feedbackFilter').value;
+      const typeFilter = document.getElementById('typeFilter').value;
+      let filtered = feedbackData;
+      if (statusFilter !== 'all') filtered = filtered.filter(item => (item.status || 'new') === statusFilter);
+      if (typeFilter !== 'all') filtered = filtered.filter(item => (item.type || item.feedbacktype || 'general') === typeFilter);
+      displayFeedback(filtered);
+    }
+    function filterQueries() {
+      const filter = document.getElementById('queryFilter').value;
+      let filtered = queriesData;
+      if (filter !== 'all') filtered = filtered.filter(item => (item.status || 'pending') === filter);
+      displayUnknownQueries(filtered);
+    }
+
+    async function viewFullMessage(index, type, currentStatus, message, title) {
+      // 1. Modal dikhao
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalMessage').textContent = message;
+      document.getElementById('messageModal').style.display = 'block';
+
+      // 2. Agar status 'new' hai, to server par 'pending' update karo
+      if (currentStatus === 'new') {
+        try {
+          // Server request (Background mein)
+          await fetch('/admin/update-status', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ index: index, type: type, status: 'pending' })
+          });
+
+          // 3. Table refresh karo taaki yellow badge dikhe
+          if (type === 'feedback') loadFeedback(true);
+          else loadUnknownQueries(true);
+
+        } catch (e) {
+          console.log("Status update failed: " + e);
+        }
+      }
+    }
+
+    function closeMessageModal() {
+      document.getElementById('messageModal').style.display = 'none';
+    }
+
+    async function markAsResolved(index, type) {
+      if (!confirm("Mark this item as resolved?")) return;
+
+      try {
+        const response = await fetch("/admin/update-status", {
+          method: "POST",
+          credentials: "same-origin",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            index: index,
+            type: type,
+            status: "resolved"
+          })
+
+        });
+
+        const res = await response.json();
+
+        if (res.success) {
+          alert("Resolved successfully");
+
+          if (type === "feedback") {
+            loadFeedback(true);
+          } else {
+            loadUnknownQueries(true);
+          }
+        } else {
+          alert(res.message || "Update failed");
+        }
+      } catch (e) {
+        console.error(e);
+        alert("Server error");
+      }
+    }
+
+    async function markAsRejected(index, type) {
+      if (!confirm("Mark this item as rejected?")) return;
+
+      try {
+        const response = await fetch("/admin/update-status", {
+          method: "POST",
+          credentials: "same-origin",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            index: index,
+            type: type,
+            status: "rejected"
+          })
+        });
+
+        const res = await response.json();
+
+        if (res.success) {
+          alert("Rejected successfully");
+
+          if (type === "feedback") {
+            loadFeedback(true);
+          } else {
+            loadUnknownQueries(true);
+          }
+        } else {
+          alert(res.message || "Update failed");
+        }
+      } catch (e) {
+        console.error(e);
+        alert("Server error");
+      }
+    }
+
+    // --- Feedback Export Fix ---
+    function exportFeedback() {
+      if (feedbackData.length == 0) {
+        showAlert('No feedback data to export', 'error');
+        return;
+      }
+      // Headers aur rows ko yahan customize kiya hai taaki Time dikhe
+      const headers = ['Date_Time', 'Type', 'Message', 'Rating', 'Status'];
+      const rows = feedbackData.map(item => [
+        `"${item.timestamp}"`, // Double quotes zaroori hain Excel ke liye
+        item.type || item.feedbacktype || 'general',
+        `"${(item.message || '').replace(/"/g, '""')}"`,
+        item.rating || 'NA',
+        item.status || 'new'
+      ]);
+      const csv = [headers, ...rows].map(row => row.join(',')).join('\n');
+      downloadCSV(csv, 'saicollege-feedback.csv');
+      showAlert('Feedback data exported with timestamps!');
+    }
+
+    // --- Unknown Queries Export Fix ---
+    function exportQueries() {
+      if (queriesData.length == 0) {
+        showAlert('No queries data to export', 'error');
+        return;
+      }
+      const headers = ['Date_Time', 'Query', 'Status'];
+      const rows = queriesData.map(item => [
+        `"${item.timestamp}"`, // Timing yahan add kar di
+        `"${(item.query || '').replace(/"/g, '""')}"`,
+        item.status || 'pending'
+      ]);
+      const csv = [headers, ...rows].map(row => row.join(',')).join('\n');
+      downloadCSV(csv, 'saicollege-queries.csv');
+      showAlert('Queries data exported with timestamps!');
+    }
+
+    function downloadCSV(csv, filename) {
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    }
+
+    /* ================= ADMIN LOGIN (MAIN VERSION) ================= */
+    async function handleLogin(event) {
+      event.preventDefault();
+      const username = document.getElementById("usernameInput").value.trim();
+      const password = document.getElementById("passwordInput").value.trim();
+      const errorBox = document.getElementById("loginError");
+      const loginBtn = document.getElementById("loginBtn");
+
+      errorBox.style.display = "none";
+      errorBox.innerText = "";
+
+      if (!username || !password) {
+        errorBox.innerText = "Username and password required";
+        errorBox.style.display = "block";
+        return;
+      }
+
+      loginBtn.disabled = true;
+      loginBtn.innerText = "Logging in...";
+
+      try {
+        const res = await fetch("/adminlogin", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "same-origin",
+          body: JSON.stringify({ username: username, password: password })
+        });
+
+        const data = await res.json();
+
+        if (res.status === 200 && data.success) {
+          window.location.href = "/admin";
+          return;
+        }
+
+        errorBox.innerText = data.message || "Login failed";
+        errorBox.style.display = "block";
+
+      } catch (err) {
+        errorBox.innerText = "Server error. Try again.";
+        errorBox.style.display = "block";
+      } finally {
+        loginBtn.disabled = false;
+        loginBtn.innerText = "Login Dashboard";
+      }
+    }
+
+    // ------ LOGOUT -------
+    function adminLogout() {
+      if (confirm('Are you sure you want to logout?')) {
+        clearInterval(refreshInterval);
+        fetch('/adminlogout')
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) showAlert('Logged out successfully!');
+
+            // ✅ CHANGE 1: Ab ye Chatbot (Home Page) par le jayega
+            setTimeout(() => { window.location.href = '/'; }, 100);
+
+          }).catch(error => {
+            // ✅ CHANGE 2: Error aane par bhi Chatbot par bhej dega
+            window.location.href = '/';
+          });
+      }
+    }
+
+    // ------ Modal close and ESC key ------
+    window.onclick = function (event) {
+      const modal = document.getElementById('messageModal');
+      if (event.target == modal) closeMessageModal();
+    }
+    document.addEventListener('keydown', function (e) {
+      if (e.key === "Escape") closeMessageModal();
+    });
+    window.onbeforeunload = function () {
+      if (refreshInterval) clearInterval(refreshInterval);
+    }
+    // ------ Network indicator -----
+    window.addEventListener('online', function () {
+      showAlert('Connection restored', 'success');
+      loadFeedback(); loadUnknownQueries();
+    });
+    window.addEventListener('offline', function () {
+      showAlert('Connection lost - working in offline mode', 'error');
+    });
+
+    // --- PASSWORD RESET LOGIC ---
+    function openResetModal() {
+      document.getElementById('resetModal').style.display = 'block';
+    }
+
+    function closeResetModal() {
+      document.getElementById('resetModal').style.display = 'none';
+      document.getElementById('resetStatus').textContent = '';
+      document.getElementById('secretCode').value = '';
+      document.getElementById('newPassword').value = '';
+    }
+
+    async function handleReset() {
+      const secret = document.getElementById('secretCode').value;
+      const newPass = document.getElementById('newPassword').value;
+      const status = document.getElementById('resetStatus');
+      const btn = document.getElementById('resetBtn');
+
+      if (!secret || !newPass) {
+        status.textContent = "⚠️ Please fill all fields!";
+        status.style.color = "#ef4444";
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "Processing...";
+      status.textContent = "";
+
+      try {
+        const res = await fetch('/admin/reset-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ secret_code: secret, new_password: newPass })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          status.textContent = "✅ Success! Password Changed.";
+          status.style.color = "#10b981";
+          setTimeout(() => {
+            closeResetModal();
+            alert("New Password Set Successfully! Please Login.");
+          }, 2000);
+        } else {
+          status.textContent = "❌ " + data.message;
+          status.style.color = "#ef4444";
+        }
+      } catch (err) {
+        status.textContent = "❌ Server connection failed";
+        status.style.color = "#ef4444";
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Reset Now";
+      }
+    }
+
+    function setUploadType(type) {
+      // Update Hidden Value
+      document.getElementById('uploadCategory').value = type;
+
+      // Update UI Text
+      const title = document.getElementById('uploadTitle');
+      const btn = document.getElementById('uploadBtn');
+      const tabSyllabus = document.getElementById('tab-syllabus');
+      const tabNotes = document.getElementById('tab-notes');
+
+      if (type === 'notes') {
+        title.innerHTML = '📤 Upload New <b>Notes</b>';
+        btn.innerHTML = '⬆ Upload Note';
+        btn.style.background = '#10b981'; // Green for Notes
+        title.style.color = '#10b981';
+
+        // Toggle Active Class Logic
+        tabNotes.style.background = 'white';
+        tabNotes.style.color = '#10b981';
+        tabNotes.style.boxShadow = '0 2px 5px rgba(0,0,0,0.05)';
+
+        tabSyllabus.style.background = 'transparent';
+        tabSyllabus.style.color = '#64748b';
+        tabSyllabus.style.boxShadow = 'none';
+
+      } else {
+        title.innerHTML = '📤 Upload New <b>Syllabus</b>';
+        btn.innerHTML = '⬆ Upload Syllabus';
+        btn.style.background = '#2a5298'; // Blue for Syllabus
+        title.style.color = '#2a5298';
+
+        // Toggle Active Class
+        tabSyllabus.style.background = 'white';
+        tabSyllabus.style.color = '#2a5298';
+        tabSyllabus.style.boxShadow = '0 2px 5px rgba(0,0,0,0.05)';
+
+        tabNotes.style.background = 'transparent';
+        tabNotes.style.color = '#64748b';
+        tabNotes.style.boxShadow = 'none';
+      }
+    }
+
+    function uploadPDF() {
+      const input = document.getElementById('pdfUploadInput');
+      const course = document.getElementById('pdfCourse').value;
+      const sem = document.getElementById('pdfSem').value;
+      const category = document.getElementById('uploadCategory').value; // Get Type
+      const file = input.files[0];
+
+      if (!course || !sem) { alert("⚠️ Please select Course and Semester!"); return; }
+      if (!file) { alert("⚠️ Please select a file!"); return; }
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('course', course);
+      formData.append('semester', sem);
+      formData.append('category', category); // Send Type to Backend
+
+      const btn = document.getElementById('uploadBtn');
+      const originalText = btn.innerText;
+      btn.innerText = "Uploading...";
+      btn.disabled = true;
+
+      fetch('/admin/upload-pdf', {
+        method: 'POST',
+        body: formData
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            window.location.href = data.redirect || "/admin";
+            alert(`✅ ${category.toUpperCase()} Uploaded!`);
+            input.value = '';
+            loadPDFs(); // Refresh list
+          } else {
+            alert("❌ Error: " + data.message);
+          }
+        })
+        .finally(() => {
+          btn.innerText = originalText;
+          btn.disabled = false;
+        });
+    }
+
+    function deletePDF(filename) {
+      if (!filename) {
+        alert("Invalid filename");
+        return;
+      }
+
+      if (!confirm("⚠ Are you sure you want to delete this file?\n\n" + filename)) return;
+
+      fetch('/admin/delete-pdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filename: filename })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            alert("✅ File deleted");
+            loadPDFs(); // refresh list
+          } else {
+            alert("❌ " + data.message);
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          alert("Server error");
+        });
+    }
+
+    function loadCourseOptions() {
+      fetch('/admin/get-data') // Backend se data mangwaya
+        .then(res => res.json())
+        .then(data => {
+          const datalist = document.getElementById('courseOptions');
+          datalist.innerHTML = ''; // List saaf karo pehle
+
+          let allCourses = [];
+
+          // Teeno categories se course names nikalo
+          if (data.ug_courses) allCourses.push(...Object.keys(data.ug_courses));
+          if (data.pg_courses) allCourses.push(...Object.keys(data.pg_courses));
+          if (data.diploma_courses) allCourses.push(...Object.keys(data.diploma_courses));
+
+          // Duplicates hatao aur Sort karo (A-Z)
+          allCourses = [...new Set(allCourses)].sort();
+
+          // Dropdown (Datalist) mein options add karo
+          allCourses.forEach(course => {
+            const option = document.createElement('option');
+            option.value = course;
+            datalist.appendChild(option);
+          });
+
+          console.log("Courses Auto-Loaded:", allCourses);
+        })
+        .catch(err => console.error("Error loading courses:", err));
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      loadCourseOptions();
+      loadPDFs();
+    });
+
+    function copyLink(link, btnElement) {
+      // 1. Temporary Textbox banao
+      const textArea = document.createElement("textarea");
+      textArea.value = link;
+      document.body.appendChild(textArea);
+
+      // 2. Select aur Copy karo
+      textArea.select();
+      try {
+        document.execCommand('copy'); // Ye purana tarika har jagah chalta hai
+
+        // 3. Success Animation (Button Green karo)
+        const originalText = btnElement.innerHTML;
+        const originalColor = btnElement.style.background;
+
+        btnElement.innerHTML = "✅ Copied!";
+        btnElement.style.background = "#10b981"; // Green
+        btnElement.disabled = true;
+
+        setTimeout(() => {
+          btnElement.innerHTML = originalText;
+          btnElement.style.background = originalColor;
+          btnElement.disabled = false;
+        }, 2000);
+
+      } catch (err) {
+        prompt("❌ Copy Failed! Is link ko manually copy karo:", link);
+      }
+
+      // 4. Safai (Textbox hatao)
+      document.body.removeChild(textArea);
+    }
+
+    // Window click se modal band karna (Optional but good)
+    window.onclick = function (event) {
+      const settingsModal = document.getElementById('settingsModal');
+      if (event.target == settingsModal) closeSettingsModal();
+    }
+
+    // --- GLOBAL DATA ---
+    let currentData = {};
+
+    // --- 1. OPEN MODAL & LOAD DATA ---
+    function openSettingsModal() {
+      const modal = document.getElementById('settingsModal');
+      modal.style.display = 'block';
+      switchEditTab('basic');
+
+      fetch('/admin/get-data')
+        .then(res => res.json())
+        .then(data => {
+          currentData = data;
+
+          // Form Fields Check & Fill
+          if (document.getElementById('inp_name')) document.getElementById('inp_name').value = data.name || "";
+          if (document.getElementById('inp_tagline')) document.getElementById('inp_tagline').value = data.accreditation || "";
+          if (document.getElementById('inp_phone')) document.getElementById('inp_phone').value = data.phone || "";
+          if (document.getElementById('inp_email')) document.getElementById('inp_email').value = data.email || "";
+          if (document.getElementById('inp_address')) document.getElementById('inp_address').value = data.address || "";
+          if (document.getElementById('inp_website')) document.getElementById('inp_website').value = data.website || "";
+
+          // JSON Backup
+          if (document.getElementById('jsonEditor')) document.getElementById('jsonEditor').value = JSON.stringify(data, null,
+            4);
+        })
+        .catch(err => console.error("Error loading info:", err));
+      renderManagerLists();
+    }
+
+    // --- 2. TAB SWITCHER ---
+    function switchEditTab(tabName) {
+      // 1. Reset UI
+      document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+      // 2. Show Selected Tab
+      document.getElementById('tab-' + tabName).style.display = 'block';
+
+      // 3. Highlight Button
+      const indexMap = { 'basic': 0, 'courses': 1, 'facilities': 2, 'advanced': 3, 'gallery': 4 };
+      const btns = document.querySelectorAll('.tab-btn');
+      if (btns[indexMap[tabName]]) btns[indexMap[tabName]].classList.add('active');
+
+      // ✅ FIX: Refresh List Immediately
+      if (tabName === 'courses' || tabName === 'facilities') {
+        renderManagerLists();
+      }
+    }
+
+    // --- 3. ADD COURSE LOGIC ---
+    function addCourseLogic() {
+      const cat = document.getElementById('course_cat').value;
+      const name = document.getElementById('course_name').value.trim();
+      const dur = document.getElementById('course_dur').value;
+      const fee = document.getElementById('course_fee').value;
+      const desc = document.getElementById('course_desc').value;
+
+      if (!name) { alert("⚠️ Course Name zaroori hai!"); return; }
+
+      if (!currentData[cat]) currentData[cat] = {};
+
+      currentData[cat][name] = {
+        "duration": dur,
+        "fee": fee,
+        "desc": desc
+      };
+
+      document.getElementById('jsonEditor').value = JSON.stringify(currentData, null, 4);
+      alert(`✅ Course "${name}" ready to save! Click 'Save All Changes' button.`);
+
+      document.getElementById('course_name').value = "";
+      document.getElementById('course_fee').value = "";
+      renderManagerLists()
+    }
+
+    // --- 4. ADD FACILITY LOGIC ---
+    function addFacilityLogic() {
+      const key = document.getElementById('fac_key').value.toLowerCase().trim();
+      const desc = document.getElementById('fac_desc').value;
+
+      if (!key) { alert("⚠️ Facility Key zaroori hai!"); return; }
+
+      if (!currentData['facilities']) currentData['facilities'] = {};
+      currentData['facilities'][key] = desc;
+
+      document.getElementById('jsonEditor').value = JSON.stringify(currentData, null, 4);
+      alert(`✅ Facility "${key}" updated! Click 'Save All Changes' button.`);
+      renderManagerLists();
+    }
+    // ============================================================
+    // ✅ STEP 2: NEW LIST MANAGER (RENDER + EDIT + DELETE)
+    // ============================================================
+
+    function renderManagerLists() {
+      // 1. COURSES LIST RENDER
+      const courseContainer = document.getElementById('coursesListContainer');
+      let courseHTML = '<table style="width:100%; border-collapse:collapse; font-size:0.85rem;">';
+
+      const categories = ['ug_courses', 'pg_courses', 'diploma_courses'];
+      let hasCourses = false;
+
+      categories.forEach(cat => {
+        if (currentData[cat]) {
+          Object.keys(currentData[cat]).forEach(courseName => {
+            hasCourses = true;
+            // Badge Colors
+            let badgeColor = cat === 'ug_courses' ? '#dbeafe' : (cat === 'pg_courses' ? '#dcfce7' : '#fef9c3');
+            let catName = cat === 'ug_courses' ? 'UG' : (cat === 'pg_courses' ? 'PG' : 'DIP');
+
+            // Data aur Syllabus Check
+            let data = currentData[cat][courseName];
+
+            // --- NEW: Syllabus Delete Button Logic ---
+            let syllabusIcon = '';
+            if (data.syllabus && data.syllabus.length > 0) {
+              syllabusIcon = `
+    <div
+      style="display:inline-flex; align-items:center; gap:5px; margin-left:8px; background:#f1f5f9; padding:2px 6px; border-radius:4px;">
+      <a href="/static/pdfs/${data.syllabus}" target="_blank" style="text-decoration:none; font-size:0.8rem;">📄
+        View</a>
+      <span onclick="deleteSyllabusLogic('${cat}', '${courseName}', '${data.syllabus}')"
+        style="cursor:pointer; color:red; font-size:0.7rem; font-weight:bold; padding-left:4px; border-left:1px solid #ccc;"
+        title="Delete PDF">🗑</span>
+    </div>
+    `;
+            }
+            // ------------------------------------------
+
+            courseHTML += `
+    <tr style="border-bottom:1px solid #f1f5f9;">
+      <td style="padding:10px 15px;"><span
+          style="background:${badgeColor}; padding:3px 8px; border-radius:12px; font-size:0.7rem; font-weight:bold; color:#334155;">${catName}</span>
+      </td>
+      <td style="padding:10px; font-weight:600; color:#333;">
+        ${courseName}
+        ${syllabusIcon}
+      </td>
+      <td style="padding:10px; text-align:right; white-space:nowrap;">
+        <button onclick="editCourseLogic('${cat}', '${courseName}')"
+          style="background:#e0f2fe; color:#0284c7; border:none; padding:6px 10px; border-radius:6px; cursor:pointer; margin-right:5px; font-weight:600; font-size:0.75rem;">✏️
+          Edit</button>
+        <button onclick="deleteCourseLogic('${cat}', '${courseName}')"
+          style="background:#fee2e2; color:#ef4444; border:none; padding:6px 10px; border-radius:6px; cursor:pointer; font-weight:600; font-size:0.75rem;">🗑
+          Delete</button>
+      </td>
+    </tr>`;
+          });
+        }
+      });
+      courseHTML += `
+  </table>`;
+
+      if (!hasCourses) courseHTML = '<div style="padding:20px; text-align:center; color:#94a3b8;">No courses added yet.</div>';
+      courseContainer.innerHTML = courseHTML;
+
+
+      // 2. FACILITIES LIST RENDER (Standard)
+      const facContainer = document.getElementById('facilitiesListContainer');
+      let facHTML = '<table style="width:100%; border-collapse:collapse; font-size:0.85rem;">';
+
+      if (currentData.facilities && Object.keys(currentData.facilities).length > 0) {
+        Object.keys(currentData.facilities).forEach(key => {
+          facHTML += `
+    <tr style="border-bottom:1px solid #f1f5f9;">
+      <td style="padding:10px 15px; font-weight:600; text-transform:capitalize; color:#333;">${key}</td>
+      <td style="padding:10px; color:#64748b; font-size:0.8rem;">${currentData.facilities[key].substring(0, 40)}...</td>
+      <td style="padding:10px; text-align:right; white-space:nowrap;">
+        <button onclick="editFacilityLogic('${key}')"
+          style="background:#e0f2fe; color:#0284c7; border:none; padding:6px 10px; border-radius:6px; cursor:pointer; margin-right:5px; font-weight:600; font-size:0.75rem;">✏️
+          Edit</button>
+        <button onclick="deleteFacilityLogic('${key}')"
+          style="background:#fee2e2; color:#ef4444; border:none; padding:6px 10px; border-radius:6px; cursor:pointer; font-weight:600; font-size:0.75rem;"> 🗑
+          Delete</button>
+      </td>
+    </tr>
+    `;
+        });
+      } else {
+        facHTML = '<div style="padding:20px; text-align:center; color:#94a3b8;">No facilities added yet.</div>';
+      }
+      facHTML += '</table>';
+      facContainer.innerHTML = facHTML;
+    }
+
+    // --- EDIT LOGIC ---
+    function editCourseLogic(cat, name) {
+      // Data nikalo
+      const data = currentData[cat][name];
+
+      // Form fill karo
+      document.getElementById('course_cat').value = cat;
+      document.getElementById('course_name').value = name;
+      document.getElementById('course_dur').value = data.duration;
+      document.getElementById('course_fee').value = data.fee;
+      document.getElementById('course_desc').value = data.desc;
+
+      // Upar scroll karo taaki user form dekh sake
+      document.getElementById('course_name').scrollIntoView({ behavior: "smooth" });
+
+      // Halka sa highlight effect (Optional)
+      document.getElementById('course_name').style.background = "#fffbeb";
+      setTimeout(() => document.getElementById('course_name').style.background = "white", 1000);
+    }
+
+    function editFacilityLogic(key) {
+      // Data nikalo
+      const desc = currentData.facilities[key];
+
+      // Form fill karo
+      document.getElementById('fac_key').value = key;
+      document.getElementById('fac_desc').value = desc;
+
+      document.getElementById('fac_key').scrollIntoView({ behavior: "smooth" });
+      document.getElementById('fac_key').style.background = "#fffbeb";
+      setTimeout(() => document.getElementById('fac_key').style.background = "white", 1000);
+    }
+
+    // --- DELETE LOGIC ---
+    function deleteCourseLogic(category, courseName) {
+      if (!confirm(`⚠️ Are you sure you want to DELETE "${courseName}"?\n\nThis will be removed permanently after you click
+  'Save All Changes'.`)) return;
+
+      // Memory me delete karo
+      delete currentData[category][courseName];
+
+      // JSON Editor update karo (Technical backup)
+      document.getElementById('jsonEditor').value = JSON.stringify(currentData, null, 4);
+
+      // List refresh karo
+      renderManagerLists();
+    }
+
+    function deleteFacilityLogic(key) {
+      if (!confirm(`⚠️ Are you sure you want to DELETE "${key}"?`)) return;
+
+      delete currentData.facilities[key];
+      document.getElementById('jsonEditor').value = JSON.stringify(currentData, null, 4);
+      renderManagerLists();
+    }
+
+    // --- 6. GALLERY UPLOAD LOGIC (UPDATED WITH SIZE CHECK) ---
+    function uploadGalleryImageLogic() {
+      const fileInput = document.getElementById('gallery_file_input');
+      const category = document.getElementById('gallery_category').value;
+      const file = fileInput.files[0];
+
+      // 1. Check: File select hui hai ya nahi
+      if (!file) {
+        alert("⚠️ Please select an image!");
+        return;
+      }
+
+      // 2. NEW CHECK: File size 5MB se zyada nahi hona chahiye
+      if (file.size > 5 * 1024 * 1024) {
+        alert("⚠️ File is too big! Please select an image under 5MB.");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('gallery_file', file);
+      formData.append('category', category);
+
+      // 3. Button ko 'Uploading...' state me daalo
+      // Yahan hum button dhund rahe hain taaki usko disable kar sakein
+      const btn = event.target || document.querySelector("button[onclick='uploadGalleryImageLogic()']");
+      if (btn) {
+        var originalText = btn.innerText;
+        btn.innerText = "⏳ Uploading...";
+        btn.disabled = true;
+        btn.style.opacity = "0.7";
+      }
+
+      fetch('/admin/upload-gallery-image', {
+        method: 'POST',
+        body: formData
+      })
+        .then(res => res.json())
+        .then(result => {
+          if (result.success) {
+            alert("✅ Photo uploaded to " + category + " section!");
+            fileInput.value = ""; // Input clear karo
+          } else {
+            alert("❌ Error: " + result.message);
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          alert("⚠️ Server Error! Check console.");
+        })
+        .finally(() => {
+          // 4. Button wapas normal karo
+          if (btn) {
+            btn.innerText = originalText;
+            btn.disabled = false;
+            btn.style.opacity = "1";
+          }
+        });
+    }
+
+    // --- 6. FINAL SAVE (WITH CONFIRMATION POPUP) ---
+    function saveAllSettings() {
+
+      // 🚨 CONFIRMATION POPUP ADDED HERE 🚨
+      if (!confirm("⚠️ Are you sure you want to save all changes?\n\nThis will update the live website immediately.")) {
+        return; // Agar Cancel kiya to yahin ruk jayega
+      }
+
+      // Basic Info Update
+      if (document.getElementById('inp_name')) currentData.name = document.getElementById('inp_name').value;
+      if (document.getElementById('inp_tagline')) currentData.accreditation = document.getElementById('inp_tagline').value;
+      if (document.getElementById('inp_phone')) currentData.phone = document.getElementById('inp_phone').value;
+      if (document.getElementById('inp_email')) currentData.email = document.getElementById('inp_email').value;
+      if (document.getElementById('inp_address')) currentData.address = document.getElementById('inp_address').value;
+      if (document.getElementById('inp_website')) currentData.website = document.getElementById('inp_website').value;
+
+      // Advanced Mode JSON Check
+      if (document.getElementById('tab-advanced') && document.getElementById('tab-advanced').style.display === 'block') {
+        try {
+          currentData = JSON.parse(document.getElementById('jsonEditor').value);
+        } catch (e) {
+          alert("❌ JSON Error in Advanced Tab!"); return;
+        }
+      }
+
+      // Server Request
+      fetch('/admin/save-data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(currentData)
+      })
+        .then(res => res.json())
+        .then(result => {
+          if (result.success) {
+            alert("✅ Success! Data Saved.");
+            closeSettingsModal();
+            location.reload();
+          } else {
+            alert("❌ Error: " + result.message);
+          }
+        });
+    }
+
+    function closeSettingsModal() {
+      const modal = document.getElementById('settingsModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    // ✅ 1. DASHBOARD LOAD: Sirf Top 5 dikhata hai
+    function loadPDFs() {
+      const recentContainer = document.getElementById('recentPdfList');
+
+      fetch('/admin/list-pdfs')
+        .then(res => res.json())
+        .then(data => {
+          // Global variable me data save kar lo taaki modal me use ho sake
+          window.allPdfData = data.files;
+
+          if (data.files.length === 0) {
+            recentContainer.innerHTML = '<div style="padding: 20px; text-align: center; color: #94a3b8;">No uploads yet.</div>';
+            return;
+          }
+
+          // Sirf PEHLI 5 files lo (Latest 5)
+          const recentFiles = data.files.slice(0, 5);
+
+          let html = '<table class="data-table" style="margin:0; width:100%;"><tbody>';
+          recentFiles.forEach(file => {
+            html += generateRowHTML(file);
+          });
+          html += '</tbody></table>';
+
+          if (data.files.length > 5) {
+            html += '<div style="text-align:center; padding:10px; background:#f8fafc; color:#64748b; font-size:0.85rem;">+ ' +
+              (data.files.length - 5) + ' more files hidden. Click "View All" to manage.</div>';
+          }
+
+          recentContainer.innerHTML = html;
+        });
+    }
+
+    // ✅ 2. MODAL LOGIC: Sab kuch dikhata hai
+    function openFullLibrary() {
+      document.getElementById('libraryModal').style.display = 'flex';
+      renderFullLibrary(window.allPdfData || []);
+    }
+
+    function closeFullLibrary() {
+      document.getElementById('libraryModal').style.display = 'none';
+    }
+
+    function renderFullLibrary(files) {
+      const container = document.getElementById('fullPdfList');
+      if (files.length === 0) {
+        container.innerHTML = '<div style="padding: 50px; text-align: center; color: #94a3b8;">No files found.</div>';
+        return;
+      }
+
+      let html = '<table class="data-table" style="width:100%;"><thead><tr style="position:sticky; top:0; background:#f8fafc; z-index:2;"><th>Type</th><th>Course</th><th>Sem</th><th>Filename</th><th style="text-align:right;">Action</th></tr></thead><tbody>';
+      files.forEach(file => {
+        html += generateRowHTML(file, true); // true for full mode
+      });
+      html += '</tbody></table>';
+      container.innerHTML = html;
+    }
+
+    // ✅ 3. SEARCH & FILTER Logic (Modal ke andar)
+    function filterLibrary() {
+      const query = document.getElementById('librarySearch').value.toLowerCase();
+      const typeFilter = document.getElementById('libraryFilterType').value;
+
+      const filtered = window.allPdfData.filter(file => {
+        const matchesSearch = file.filename.toLowerCase().includes(query) ||
+          file.course.toLowerCase().includes(query);
+
+        let matchesType = true;
+        let isNote = (file.category === 'notes') || file.filename.toLowerCase().includes('note');
+
+        if (typeFilter === 'notes') matchesType = isNote;
+        if (typeFilter === 'syllabus') matchesType = !isNote;
+
+        return matchesSearch && matchesType;
+      });
+
+      renderFullLibrary(filtered);
+    }
+
+    // ✅ HELPER: Table Row Generator
+    function generateRowHTML(file, isFullMode = false) {
+      const filename = file.filename;
+      const course = file.course || "General";
+      const sem = file.semester || "-";
+      const category = file.category || "syllabus";
+
+      const isNote = category === "notes";
+      const typeBadge = isNote
+        ? '<span style="background:#dcfce7;color:#166534;padding:2px 8px;border-radius:10px;font-size:12px;">Note</span>'
+        : '<span style="background:#dbeafe;color:#1e40af;padding:2px 8px;border-radius:10px;font-size:12px;">Syllabus</span>';
+
+      const displayName =
+        isFullMode || filename.length <= 25
+          ? filename
+          : filename.substring(0, 22) + "...";
+
+      const fullPath = `/static/pdfs/${filename}`;
+
+      return `
+<tr style="border-bottom:1px solid #f1f5f9;">
+  <td style="padding:10px;">${typeBadge}</td>
+  <td style="padding:10px;font-weight:600;">${course}</td>
+  <td style="padding:10px;color:#64748b;">${sem}</td>
+  <td style="padding:10px;">
+    <a href="${fullPath}" target="_blank"
+       style="color:#2563eb;text-decoration:none;font-weight:500;">
+      ${displayName}
+    </a>
+  </td>
+  <td style="padding:10px;text-align:right;">
+    <button
+      onclick="copyLink('${window.location.origin}${fullPath}', this)"
+      style="background:#10b981;color:white;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;margin-right:6px;">
+      📋
+    </button>
+
+    <button
+  style="background:#fee2e2;color:#b91c1c;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;"
+  onclick="deleteSyllabusLogic('${file.category}', '${file.course}', '${file.filename}')">
+  🗑
+</button>
+
+  </td>
+</tr>
+`;
+    }
+
+    function deletePDF(filename) {
+      if (!confirm("Are you sure you want to delete this file?")) return;
+
+      fetch('/admin/delete-pdf', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ filename: filename })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            alert("✅ File deleted");
+            loadPDFs();   // refresh list
+          } else {
+            alert("❌ " + data.message);
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          alert("❌ Delete failed");
+        });
+    }
+
+    function deleteSyllabusLogic(category, course, filename) {
+      if (!filename) {
+        alert("Filename missing");
+        return;
+      }
+
+      if (!confirm(`Delete this PDF?\n\n${filename}`)) return;
+
+      fetch("/admin/delete-pdf", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ filename: filename })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            alert("✅ File deleted");
+            loadPDFs();
+            renderFullLibrary(window.allPdfData || []);
+          } else {
+            alert("❌ " + data.message);
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          alert("Server error");
+        });
+    }
+
+    function openGalleryManager() {
+      window.location.href = "/admin/gallery-manager";
+    }
+
+  </script>
+</body>
+
+</html>

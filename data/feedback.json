@@ -1,0 +1,70 @@
+[
+  {
+    "id": 1769840761581,
+    "date": "31 Jan 2026 11:56 AM",
+    "type": "complaint",
+    "message": "3 star me not working ??\n",
+    "rating": "3",
+    "status": "new"
+  },
+  {
+    "id": 1769840738959,
+    "date": "31 Jan 2026 11:55 AM",
+    "type": "appreciation",
+    "message": "hello boss",
+    "rating": "5",
+    "status": "new"
+  },
+  {
+    "id": 1769795069958,
+    "date": "30 Jan 2026 11:14 PM",
+    "type": "appreciation",
+    "message": "finaly fix hua ",
+    "rating": "4",
+    "status": "resolved"
+  },
+  {
+    "id": 1769777243653,
+    "date": "30 Jan 2026 06:17 PM",
+    "type": "complaint",
+    "message": "Library ke computers bilkul purane hain, update karenge kya?",
+    "rating": "4",
+    "status": "resolved"
+  },
+  {
+    "id": 1769776908587,
+    "date": "30 Jan 2026 06:11 PM",
+    "type": "chatbot",
+    "message": "ye dekho thik hua ki nahi",
+    "rating": "4",
+    "status": "resolved"
+  },
+  {
+    "date": "30 Jan 2026 03:11 PM",
+    "type": "complaint",
+    "message": "kaam hua ki nahi check karo",
+    "rating": "3",
+    "status": "resolved"
+  },
+  {
+    "date": "30 Jan 2026 03:06 PM",
+    "type": "suggestion",
+    "message": "hello",
+    "rating": "2",
+    "status": "resolved"
+  },
+  {
+    "date": "30 Jan 2026 02:50 PM",
+    "type": "general",
+    "message": "fix jaldi karna yrr",
+    "rating": "3",
+    "status": "resolved"
+  },
+  {
+    "date": "30 Jan 2026 02:37 PM",
+    "type": "suggestion",
+    "message": "fix hua ",
+    "rating": "4",
+    "status": "resolved"
+  }
+]

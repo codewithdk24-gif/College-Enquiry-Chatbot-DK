@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Hub - Notes & Syllabus</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Theme Colors */
+            --primary: #2a5298;
+            --primary-dark: #1e3c72;
+            --bg-body: #f0f2f5;
+            --surface: #ffffff;
+            --text-main: #1b2559;
+            --text-light: #707eae;
+
+            /* Status Colors */
+            --success: #10B981;
+            /* Green for Notes */
+            --danger: #E05D5D;
+            /* Red for Syllabus */
+
+            /* Shadows */
+            --shadow-sm: 0px 4px 12px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0px 12px 24px rgba(42, 82, 152, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-body);
+            margin: 0;
+            padding: 0;
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* --- 1. HEADER SECTION --- */
+        .header-section {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            padding: 20px 20px 40px;
+            /* Extra bottom padding for overlap */
+            border-radius: 0 0 30px 30px;
+            color: white;
+            box-shadow: 0 4px 20px rgba(42, 82, 152, 0.25);
+            margin-bottom: 25px;
+        }
+
+        .top-nav {
+            margin-bottom: 15px;
+        }
+
+        .back-btn {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            opacity: 0.9;
+            transition: 0.2s;
+        }
+
+        .back-btn:hover {
+            opacity: 1;
+            transform: translateX(-3px);
+        }
+
+        .header-title h1 {
+            margin: 10px 0 5px;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .header-title p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 0.95rem;
+            font-weight: 300;
+        }
+
+        /* Search Bar inside Header */
+        .search-container {
+            margin-top: 20px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 20px 14px 45px;
+            border-radius: 15px;
+            border: none;
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--text-main);
+            font-size: 1rem;
+            font-family: inherit;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+            opacity: 0.5;
+            color: var(--text-main);
+        }
+
+        /* --- 2. FLOATING TAB SWITCHER --- */
+        .mode-toggle {
+            display: flex;
+            background: white;
+            padding: 5px;
+            border-radius: 16px;
+            margin: -55px 20px 20px;
+            /* Negative margin pulls it up */
+            position: relative;
+            z-index: 10;
+            box-shadow: var(--shadow-sm);
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            border-radius: 12px;
+            font-weight: 600;
+            font-family: inherit;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .toggle-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 10px rgba(42, 82, 152, 0.2);
+        }
+
+        /* --- 3. FILTER CHIPS (Scrollable) --- */
+        .filter-scroller {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 0 20px 15px;
+            scrollbar-width: none;
+            /* Firefox */
+            margin-bottom: 5px;
+        }
+
+        .filter-scroller::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Chrome */
+
+        .filter-chip {
+            white-space: nowrap;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: white;
+            border: 1px solid #e0e5f2;
+            color: var(--text-main);
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            font-size: 0.85rem;
+        }
+
+        .filter-chip.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 10px rgba(42, 82, 152, 0.2);
+        }
+
+        /* --- 4. GRID LAYOUT & CARDS --- */
+        .container {
+            padding: 0 20px 80px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .grid {
+            display: grid;
+            /* Mobile First: 1 Column (Full Width but Compact) */
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        /* Tablet & Desktop: 2 or 3 Columns */
+        @media (min-width: 600px) {
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 20px;
+            }
+        }
+
+        /* --- 🔥 COMPACT CARD DESIGN 🔥 --- */
+        .file-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: var(--shadow-sm);
+            transition: 0.2s ease;
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Left Side Color Stripe */
+        .file-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            z-index: 1;
+        }
+
+        /* Syllabus gets RED, Notes get GREEN */
+        .type-syllabus::before {
+            background: var(--danger);
+        }
+
+        .type-notes::before {
+            background: var(--success);
+        }
+
+        .card-content {
+            padding: 12px 15px 12px 20px;
+            /* Left padding ensures text doesn't hit the stripe */
+            flex-grow: 1;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .course-badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .type-syllabus .course-badge {
+            background: #FFF0F0;
+            color: var(--danger);
+        }
+
+        .type-notes .course-badge {
+            background: #ECFDF5;
+            color: var(--success);
+        }
+
+        .file-icon {
+            font-size: 1.2rem;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin: 0;
+            line-height: 1.4;
+            /* Truncate text after 2 lines */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-meta {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        /* Download Button Bar */
+        .download-btn {
+            display: block;
+            text-align: center;
+            padding: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: 0.2s;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        /* Button Colors based on Type */
+        .type-syllabus .download-btn {
+            background: #FFF9F9;
+            color: var(--danger);
+        }
+
+        .type-notes .download-btn {
+            background: #F4FDF9;
+            color: var(--success);
+        }
+
+        .type-syllabus .download-btn:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        .type-notes .download-btn:hover {
+            background: var(--success);
+            color: white;
+        }
+
+        .file-card:active {
+            transform: scale(0.98);
+        }
+
+        /* --- EMPTY STATE --- */
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-light);
+            display: none;
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 10px;
+            opacity: 0.5;
+            filter: grayscale(1);
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header-section">
+        <nav class="top-nav">
+            <a href="/" class="back-btn">← Home</a>
+        </nav>
+        <div class="header-title">
+            <h1>Library</h1>
+            <p>Notes & Syllabus at your fingertips.</p>
+        </div>
+
+        <div class="search-container">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" class="search-input" placeholder="Search by subject or course..."
+                onkeyup="filterGrid()">
+        </div>
+    </header>
+
+    <div class="mode-toggle">
+        <button class="toggle-btn active" id="btn-syllabus" onclick="switchMode('syllabus')">Syllabus</button>
+        <button class="toggle-btn" id="btn-notes" onclick="switchMode('notes')">Notes</button>
+    </div>
+
+    <div class="filter-scroller" id="filterContainer">
+        <button class="filter-chip active" onclick="applyFilter('all', this)">All</button>
+    </div>
+
+    <div class="container">
+        <div class="grid" id="resourceGrid">
+            {% if files %}
+            {% for file in files %}
+            <div class="file-card" data-course="{{ file.course }}" data-sem="{{ file.semester }}"
+                data-filename="{{ file.filename }}"
+                data-search="{{ file.course }} {{ file.semester }} {{ file.filename }}">
+
+                <div class="card-content">
+                    <div class="card-header">
+                        <span class="course-badge">{{ file.course }}</span>
+                        <span class="file-icon"></span>
+                    </div>
+                    <h3 class="card-title">{{ file.filename }}</h3>
+                    <div class="card-meta">{{ file.semester }}</div>
+                </div>
+
+                <a href="{{ url_for('static', filename='pdfs/' + file.filename) }}" class="download-btn"
+                    target="_blank">
+                    Download ⬇
+                </a>
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            <div id="noResult" class="empty-state">
+                <span class="empty-icon">🤔</span>
+                <h3>No matches found</h3>
+                <p>Try searching for a different keyword.</p>
+            </div>
+
+            {% if not files %}
+            <div class="empty-state" style="display:block;">
+                <span class="empty-icon">📭</span>
+                <h3>Library is Empty</h3>
+                <p>No documents uploaded yet.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        let currentMode = 'syllabus'; // Default mode
+        let currentFilter = 'all';    // Default filter
+
+        // ✅ Page Load Initialization
+        document.addEventListener("DOMContentLoaded", () => {
+            // Check URL params for mode (e.g. ?type=notes)
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('type') === 'notes') {
+                switchMode('notes');
+            } else {
+                switchMode('syllabus');
+            }
+
+            // 1. Fetch Courses for Filter Bar
+            fetchCourses();
+
+            // 2. Setup Cards (Icons & Colors)
+            setupCards();
+        });
+
+        // ✅ FUNCTION 1: Auto-Fetch Courses from Backend
+        function fetchCourses() {
+            // NOTE: Ensure your app.py has a route to serve this data.
+            // If /api/courses doesn't exist, this part won't load extra buttons.
+            fetch('/api/courses')
+                .then(res => res.json())
+                .then(data => {
+                    let allCourses = [];
+
+                    // Extract courses safely
+                    if (data.undergraduate) allCourses.push(...Object.keys(data.undergraduate));
+                    if (data.postgraduate) allCourses.push(...Object.keys(data.postgraduate));
+                    if (data.diploma) allCourses.push(...Object.keys(data.diploma));
+
+                    // Remove duplicates and sort A-Z
+                    allCourses = [...new Set(allCourses)].sort();
+
+                    // Get container
+                    const container = document.getElementById('filterContainer');
+
+                    // Add buttons dynamically
+                    allCourses.forEach(course => {
+                        const btn = document.createElement('button');
+                        btn.className = 'filter-chip';
+                        btn.innerText = course;
+                        btn.onclick = function () { applyFilter(course, this); };
+                        container.appendChild(btn);
+                    });
+                })
+                .catch(err => {
+                    console.log("Could not auto-fetch courses. Ensure /api/courses route exists.", err);
+                });
+        }
+
+        // ✅ FUNCTION 2: Setup Card Appearance
+        function setupCards() {
+            document.querySelectorAll('.file-card').forEach(card => {
+                const name = card.getAttribute('data-filename').toLowerCase();
+                const iconSpan = card.querySelector('.file-icon');
+                const btn = card.querySelector('.download-btn');
+
+                // Determine if Note or Syllabus based on filename
+                if (name.includes('note')) {
+                    card.classList.add('type-notes');
+                    iconSpan.innerText = "📒";
+                    btn.innerText = "View Notes ↗";
+                } else {
+                    card.classList.add('type-syllabus');
+                    iconSpan.innerText = "📄";
+                    btn.innerText = "View Syllabus ↗";
+                }
+            });
+            // Apply initial filter logic
+            filterGrid();
+        }
+
+        // ✅ FUNCTION 3: Switch Tabs
+        function switchMode(mode) {
+            currentMode = mode;
+            // Update Tab UI
+            document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-' + mode).classList.add('active');
+
+            // Re-run filter
+            filterGrid();
+        }
+
+        // ✅ FUNCTION 4: Apply Chip Filter
+        function applyFilter(courseName, btnElement) {
+            currentFilter = courseName;
+
+            // Update Chip UI
+            document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            // Re-run filter
+            filterGrid();
+        }
+
+        // ✅ FUNCTION 5: Master Filter Logic
+        function filterGrid() {
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            let count = 0;
+
+            document.querySelectorAll('.file-card').forEach(card => {
+                const cCourse = card.getAttribute('data-course');
+                const isNote = card.classList.contains('type-notes');
+                const isSyllabus = card.classList.contains('type-syllabus');
+                const searchData = card.getAttribute('data-search').toLowerCase();
+
+                // Logic Conditions
+                const matchTab = (currentMode === 'syllabus' && isSyllabus) || (currentMode === 'notes' && isNote);
+                const matchFilter = (currentFilter === 'all' || cCourse === currentFilter);
+                const matchSearch = searchData.includes(searchQuery);
+
+                // Final Decision
+                if (matchTab && matchFilter && matchSearch) {
+                    card.style.display = 'flex';
+                    count++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Show "No Result" if needed
+            const noMsg = document.getElementById('noResult');
+            const totalCards = document.querySelectorAll('.file-card').length;
+
+            if (count === 0 && totalCards > 0) {
+                noMsg.style.display = 'block';
+            } else {
+                noMsg.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+
+</html>

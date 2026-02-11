@@ -1,0 +1,115 @@
+{
+    "accreditation": "NAAC B++ Grade (CGPA 2.89) valid till Feb 2028. Hemchand Yadav University se affiliated. UGC 2(f) recognized.",
+    "address": "Street 69, Sector 6, Bhilai, Chhattisgarh, 490006",
+    "diploma_courses": {
+        "DCA": {
+            "desc": "Diploma in Computer Applications - Office Automation, C/Python Programming, HTML aur E-Commerce. Practical-oriented quick course jo IT field me entry ke liye best hai.",
+            "duration": "1 Year",
+            "fee": "\u20b910,000/year"
+        },
+        "PGDCA": {
+            "desc": "PG Diploma in Computer Applications - Software Organization, Python, DBMS, Tally aur Project Work. Graduates ke liye IT skills enhance karne ka best option.",
+            "duration": "1 Year",
+            "fee": "\u20b918,500/year"
+        }
+    },
+    "director": {
+        "message": "Knowledge creation and dissemination is the prime motive.",
+        "name": "Harmeet Singh Sachdev",
+        "role": "Director (B.E., M.E.)"
+    },
+    "email": "director@saicollege.in",
+    "facilities": {
+        "hostel": "\ud83c\udfe0 Separate boys \ud83d\udc68 aur girls \ud83d\udc69 hostels with security \ud83e\uddd1\u200d\ud83d\udcbc, mess facility \ud83c\udf7d\ufe0f, study rooms \ud83d\udcda aur comfortable stay. Outstation students ke liye homely environment provide karta hai college.",
+        "incubation": "\ud83c\udfed Sai Kalakriti & Incubation Centre (Dec 2021) \ud83c\udfaf - Soap making \ud83e\uddfc, Jewellery designing \ud83d\udc8d, Jute bags \ud83d\udc5c aur skill development workshops \ud83d\udee0\ufe0f. Students ko entrepreneur \ud83d\udcbc banane ka unique platform.",
+        "labs": "\ud83d\udd2c State-of-the-art labs: Physics \u26a1, Chemistry \ud83e\uddea, Botany \ud83c\udf31, Zoology \ud83d\udc3e, Microbiology \ud83e\udda0, Biotechnology \ud83e\uddec aur 400+ Core i3 computers \ud83d\udcbb with high-speed internet. Government aur private exams bhi yahan conduct hote hain.",
+        "library": "\ud83d\udcda 50,000+ books \ud83d\udcd6, E-library facility \ud83d\udcbb, Digital journals \ud83d\udcf0, Wi-Fi reading rooms \ud83d\udce1 aur N-LIST resources available. Best N-LIST User Award bhi mila hai. Students semester bhar books rakh sakte hain.",
+        "sports": "\ud83c\udfc3\u2642\ufe0f Outdoor: Cricket \ud83c\udfcf, Volleyball \ud83c\udfd0, Football \u26bd, Handball \ud83e\udd3e. Indoor: Table Tennis \ud83c\udfd3, Badminton \ud83c\udff8, Carrom \u265f\ufe0f, Chess \u265f\ufe0f. State/National level players ko fee concession milta hai. Regular tournaments organize hote hain.",
+        "transport": "\ud83d\ude8c College ki apni buses available \ud83d\ude8d. Bhilai, Durg aur nearby areas me routes cover hoti hain. Bhilai Nagar Railway Station se 200m \ud83d\ude89 aur Six Tree Avenue se 100m dur hai college."
+    },
+    "map_link": "https://maps.app.goo.gl/WGWcAH3g8fyyvZ3m8",
+    "name": "Sai College (Sai Mahavidyalaya), Sector-06, Bhilai, Chhattisgarh",
+    "pg_courses": {
+        "M.A. (English)": {
+            "desc": "M.A. English - Critical Theory, Indian Writing, American Literature aur Linguistics. Advanced language skills develop hoti hai. Teaching, research, content writing aur editorial careers ke liye perfect.",
+            "duration": "2 Years",
+            "fee": "\u20b912,000/year"
+        },
+        "M.Com": {
+            "desc": "Master of Commerce - Advanced Accounting, Taxation, Financial Management aur Marketing. Specializations: Finance, Marketing, Banking & Insurance. Corporate jobs aur PhD research ke liye excellent platform.",
+            "duration": "2 Years",
+            "fee": "\u20b914,000/year"
+        },
+        "M.Lib. (ISc)": {
+            "desc": "Master of Library & Information Science - Library Organization, Cataloguing, Digital Libraries aur Computer Applications. Educational institutions aur corporate libraries me librarian positions ke liye professional degree.",
+            "duration": "1 Year",
+            "fee": "\u20b923,000/year"
+        },
+        "MSc Biotech": {
+            "desc": "M.Sc. Biotechnology - Advanced Genetic Engineering, Bioinformatics, Nano Biotechnology aur Research Methodology. Modern lab facilities me project work aur paper publication mandatory hai. Research aur pharma industries ke liye best course.",
+            "duration": "2 Years",
+            "fee": "\u20b927,000/year"
+        },
+        "MSc CS": {
+            "desc": "M.Sc. Computer Science - Operating Systems, RDBMS, AI, Data Mining, Python, Java programming. Advanced topics: Computer Graphics, Image Processing, Software Engineering. Practical implementation pe strong focus hai.",
+            "duration": "2 Years",
+            "fee": "\u20b918,000/year"
+        },
+        "MSc Chemistry": {
+            "desc": "M.Sc. Chemistry - Organic, Inorganic, Physical Chemistry aur Spectroscopy ka deep knowledge. Modern analytical instruments wale labs me research work. NET/GATE qualification ke liye best preparation.",
+            "duration": "2 Years",
+            "fee": "\u20b920,000/year"
+        }
+    },
+    "phone": "7024886996, 9977001027",
+    "principal": {
+        "education": "MCA, MPhil, Ph.D. (Computer Sc.)",
+        "name": "Dr. (Smt) Mamta Singh",
+        "role": "Principal & Dy. Director"
+    },
+    "ug_courses": {
+        "B.Com": {
+            "desc": "Bachelor of Commerce - Accounting, Economics, GST, Taxation aur Finance me expertise develop hoti hai. NEP 2020 pattern follow karta hai. CA, CS, CMA jaise professional exams ke liye best preparation. Specializations: Finance, Marketing, Computer Applications.",
+            "duration": "3 Years",
+            "fee": "\u20b918,000/year",
+            "syllabus": "/static/pdfs/b.com_syllabus.pdf"
+        },
+        "BA": {
+            "desc": "Bachelor of Arts - Sociology, Economics, Hindi Literature aur Political Science subjects available. Analytical thinking aur communication skills develop hoti hai. Civil services, teaching, journalism aur social work careers ke liye ideal.",
+            "duration": "3 Years",
+            "fee": "\u20b912,000/year",
+            "syllabus": "/static/pdfs/ba_syllabus.pdf"
+        },
+        "BBA": {
+            "desc": "Bachelor of Business Administration - Management, Marketing, Finance, HR aur Operations ka complete knowledge. Business communication, leadership skills aur entrepreneurship ke through industrial exposure milta hai. Corporate career ke liye perfect course.",
+            "duration": "3 Years",
+            "fee": "\u20b923,000/year",
+            "syllabus": "/static/pdfs/bba_syllabus.pdf"
+        },
+        "BCA": {
+            "desc": "Bachelor of Computer Applications - Programming (C, Python, Java), Database Management, Web Development aur Software Engineering sikhate hain. NEP 2020 pattern ke saath 400+ computers wale labs me practical training milti hai. IT industry ke liye best course hai.",
+            "duration": "3 Years",
+            "fee": "\u20b924,700/year",
+            "syllabus": "/static/pdfs/bca_syllabus.pdf"
+        },
+        "BSc Biotech": {
+            "desc": "B.Sc. Biotechnology - Genetics, Molecular Biology, Genetic Engineering aur Tissue Culture ki practical training. Modern biotech labs with tissue culture facility available hai. Research aur pharma industry ke liye excellent opportunities.",
+            "duration": "3 Years",
+            "fee": "\u20b924,700/year",
+            "syllabus": "/static/pdfs/bsc bio_syllabus.pdf"
+        },
+        "BSc CS": {
+            "desc": "B.Sc. Computer Science - Physics, Maths aur CS combination me programming, algorithms aur software development sikhate hain. IT industry aur higher studies (MCA/MSc) ke liye strong foundation course.",
+            "duration": "3 Years",
+            "fee": "\u20b917,000/year",
+            "syllabus": "/static/pdfs/bsc cs_syllabus.pdf"
+        },
+        "BSc Maths/Bio": {
+            "desc": "B.Sc. with PCM (Physics, Chemistry, Maths) ya PCB (Physics, Chemistry, Biology) combination. Well-equipped labs for practicals. UPSC, banking exams aur research opportunities ke liye perfect preparation.",
+            "duration": "3 Years",
+            "fee": "\u20b913,000/year",
+            "syllabus": "/static/pdfs/bsc math & bio_syllabus.pdf"
+        }
+    },
+    "website": "www.saicollege.in"
+}
