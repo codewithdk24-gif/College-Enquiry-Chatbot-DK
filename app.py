@@ -15,6 +15,8 @@ import os
 import json
 import time
 
+from flask_wtf.csrf import CSRFError
+
 import shutil
 from datetime import datetime, timedelta
 from difflib import get_close_matches
@@ -22,10 +24,25 @@ from difflib import get_close_matches
 load_dotenv()
 
 app = Flask(__name__, template_folder="templates")
-app.secret_key = os.getenv("FLASK_SECRET_KEY")
+app.secret_key = os.getenv("FLASK_SECRET_KEY", "fallback-secret-key")
+
+app.config.update(
+    SESSION_COOKIE_SECURE=True,
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax"
+)
+
 app.config["SESSION_TYPE"] = "filesystem"
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(hours=24)
 csrf = CSRFProtect(app)
+
+@app.errorhandler(CSRFError)
+def handle_csrf_error(e):
+    return jsonify({
+        "success": False,
+        "error": "CSRF token missing or invalid"
+    }), 400
+
 
 MAX_CONTENT_LENGTH = 16 * 1024 * 1024
 app.config["MAX_CONTENT_LENGTH"] = MAX_CONTENT_LENGTH
@@ -1622,6 +1639,10 @@ def update_status():
             return jsonify(success=True)
 
     return jsonify(success=False, message="Invalid type"), 400
+
+@app.errorhandler(CSRFError)
+def handle_csrf_error(e):
+    return "Session expired. Please refresh the page and try again.", 400
 
 if __name__ == "__main__":
     print("🎓 Sai College Chatbot Starting...")
